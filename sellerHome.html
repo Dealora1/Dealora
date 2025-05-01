@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Dealora | Seller</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="">
+    <header>
+      <!-- ✅ اليسار: الشعار وروابط البائع -->
+      <div class="left-side">
+        <div class="logo">DEALORA</div>
+        <nav class="nav">
+          <a href="#">DASHBOARD</a>
+
+          <!-- ✅ قائمة PRODUCTS المنسدلة -->
+          <div class="dropdown">
+            <a href="#" onclick="toggleDropdown(event, 'productDropdown')">PRODUCTS</a>
+            <div class="dropdown-content" id="productDropdown">
+              <div class="column">
+                <a href="Seller Product Management.html"><h4>All Products</h4></a>
+                <a href="menseller.html">Men</a>
+                <a href="womenseller.html">Women</a>
+                <a href="Kidsseller.html">Kids</a>
+              </div>
+            </div>
+          </div>
+
+          <a href="#">ORDERS</a>
+          <a href="#">REVIEWS</a>
+        </nav>
+
+        <!-- ✅ قائمة SELLER MENU المنسدلة -->
+        <div class="dropdown">
+          <a href="#" onclick="toggleDropdown(event, 'shopDropdown')">SELLER MENU</a>
+          <div class="dropdown-content" id="shopDropdown">
+            <div class="column">
+              <h4>Manage</h4>
+              <a href="#">Add Product</a>
+              <a href="#">View Inventory</a>
+              <a href="#">Edit Listings</a>
+            </div>
+
+            <div class="column">
+              <h4>Orders</h4>
+              <a href="#">Pending</a>
+              <a href="#">Shipped</a>
+              <a href="#">Returns</a>
+            </div>
+
+            <div class="column">
+              <h4>Reports</h4>
+              <a href="#">Sales</a>
+              <a href="#">Revenue</a>
+              <a href="#">Performance</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ✅ اليمين: البحث وأيقونات البائع -->
+      <div class="right-side">
+        <div class="search-container">
+          <i class="fas fa-search"></i>
+          <input type="text" placeholder="Search Products">
+        </div>
+        <i class="fas fa-bell" title="Notifications"></i>
+        <a href="seller-signin.html" title="Seller Account">
+          <i class="fas fa-user-cog"></i>
+        </a>
+        <i class="fas fa-sign-out-alt" title="Logout"></i>
+      </div>
+    </header>
+
+    <div class="content">
+      <h1>WELCOME SELLER</h1>
+      <button class="shop-now">MANAGE STORE</button>
+    </div>
+  </div>
+
+  <!-- ✅ JavaScript لتفعيل جميع القوائم المنسدلة -->
+  <script>
+    function toggleDropdown(event, dropdownId) {
+      event.preventDefault();
+      event.stopPropagation();
+
+      // اغلاق جميع القوائم أولاً
+      document.querySelectorAll('.dropdown-content').forEach(drop => drop.classList.remove('show'));
+
+      // فتح القائمة المطلوبة
+      const dropdown = document.getElementById(dropdownId);
+      dropdown.classList.toggle("show");
+    }
+
+    window.addEventListener("click", function(e) {
+      document.querySelectorAll('.dropdown-content').forEach(drop => {
+        if (!e.target.closest(".dropdown")) {
+          drop.classList.remove("show");
+        }
+      });
+    });
+  </script>
+</body>
+</html>

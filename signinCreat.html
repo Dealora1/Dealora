@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Dealora | Create Seller Account</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+
+  <!-- ✅ الهيدر -->
+  <header>
+    <div class="left-side">
+      <a href="home.html" class="logo">DEALORA</a>
+      <nav class="nav">
+        <a href="#">NEW IN</a>
+
+        <!-- قائمة SHOP -->
+        <div class="dropdown">
+          <a href="#" onclick="toggleDropdown(event)">SHOP</a>
+          <div class="dropdown-content" id="shopDropdown">
+            <div class="column">
+              <h4>Games</h4>
+              <a href="#">PlayStation</a>
+              <a href="#">Xbox</a>
+              <a href="#">Nintendo</a>
+            </div>
+            <div class="column">
+              <a href="catalog.html"><h4>CATALOG</h4></a>
+              <a href="men.html">Men</a>
+              <a href="women.html">Women</a>
+              <a href="kids.html">Kids</a>
+            </div>
+            <div class="column">
+              <h4>Electronics</h4>
+              <a href="#">Phones</a>
+              <a href="#">Laptops</a>
+              <a href="#">Accessories</a>
+            </div>
+          </div>
+        </div>
+
+        <a href="#">STYLE & TRUTH</a>
+        <a href="#">DISCOVER</a>
+        <a href="#">OUTLET</a>
+      </nav>
+    </div>
+
+    <div class="right-side">
+      <div class="search-container">
+        <i class="fas fa-search"></i>
+        <input type="text" placeholder="Search">
+      </div>
+      <i class="fas fa-heart" title="Favorites"></i>
+      <a href="signin.html" title="Account">
+        <i class="fas fa-user"></i>
+      </a>
+      <i class="fas fa-bag-shopping" title="Cart"></i>
+    </div>
+  </header>
+
+  <!-- ✅ نموذج إنشاء حساب بائع -->
+  <div class="container" style="max-width: 500px; margin: 120px auto; background: white; padding: 40px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
+    <h2 style="text-align: center; margin-bottom: 30px;">Create Account</h2>
+
+    <form>
+      <label for="storeName">Store / Business Name</label>
+      <input type="text" id="storeName" name="storeName" placeholder="Enter your store name" required style="width: 100%; padding: 10px; margin-bottom: 15px;">
+
+      <label for="email">Email</label>
+      <input type="email" id="email" name="email" placeholder="Enter your email" required style="width: 100%; padding: 10px; margin-bottom: 15px;">
+
+      <label for="phone">Phone Number</label>
+      <input type="tel" id="phone" name="phone" placeholder="05xxxxxxxx" required style="width: 100%; padding: 10px; margin-bottom: 15px;">
+
+      <label for="password">Password</label>
+      <input type="password" id="password" name="password" placeholder="Enter password" required style="width: 100%; padding: 10px; margin-bottom: 15px;">
+
+      <label for="confirm">Confirm Password</label>
+      <input type="password" id="confirm" name="confirm" placeholder="Re-enter password" required style="width: 100%; padding: 10px; margin-bottom: 15px;">
+
+      <label for="category">Product Category (Optional)</label>
+      <input type="text" id="category" name="category" placeholder="e.g. Fashion, Electronics" style="width: 100%; padding: 10px; margin-bottom: 15px;">
+
+      <label style="display: block; margin-bottom: 20px;">
+        <input type="checkbox" required> I agree to the terms and conditions
+      </label>
+
+      <a href="home.html" style="display: block; text-align: center; background: black; color: white; padding: 12px; text-decoration: none; font-weight: bold;">
+        CREATE ACCOUNT
+      </a>
+      
+    </form>
+  </div>
+
+  <!-- ✅ JavaScript للقائمة -->
+  <script>
+    function toggleDropdown(event) {
+      event.preventDefault();
+      event.stopPropagation();
+      const dropdown = document.getElementById("shopDropdown");
+      dropdown.classList.toggle("show");
+    }
+
+    window.addEventListener("click", function(e) {
+      const dropdown = document.getElementById("shopDropdown");
+      if (!e.target.closest(".dropdown")) {
+        dropdown.classList.remove("show");
+      }
+    });
+  </script>
+</body>
+</html>

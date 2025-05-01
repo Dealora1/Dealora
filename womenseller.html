@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Dealora | Kids Seller</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="catalog-page">
+
+  <!-- ✅ الهيدر -->
+  <header>
+    <div class="left-side">
+        <a href="sellerHome.html" class="logo">DEALORA</a>
+
+      <nav class="nav">
+        <a href="#">DASHBOARD</a>
+
+        <div class="dropdown">
+          <a href="#" onclick="toggleDropdown(event, 'productDropdown')">PRODUCTS</a>
+          <div class="dropdown-content" id="productDropdown">
+            <div class="column">
+              <a href="Seller Product Management.html"><h4>All Products</h4></a>
+              <a href="menseller.html">Men</a>
+              <a href="womenseller.html">Women</a>
+              <a href="Kidsseller.html">Kids</a>
+            </div>
+          </div>
+        </div>
+
+        <a href="#">ORDERS</a>
+        <a href="#">REVIEWS</a>
+      </nav>
+
+      <div class="dropdown">
+        <a href="#" onclick="toggleDropdown(event, 'shopDropdown')">SELLER MENU</a>
+        <div class="dropdown-content" id="shopDropdown">
+          <div class="column">
+            <h4>Manage</h4>
+            <a href="#">Add Product</a>
+            <a href="#">View Inventory</a>
+            <a href="#">Edit Listings</a>
+          </div>
+          <div class="column">
+            <h4>Orders</h4>
+            <a href="#">Pending</a>
+            <a href="#">Shipped</a>
+            <a href="#">Returns</a>
+          </div>
+          <div class="column">
+            <h4>Reports</h4>
+            <a href="#">Sales</a>
+            <a href="#">Revenue</a>
+            <a href="#">Performance</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="right-side">
+      <div class="search-container">
+        <i class="fas fa-search"></i>
+        <input type="text" placeholder="Search Products">
+      </div>
+      <i class="fas fa-bell" title="Notifications"></i>
+      <a href="seller-signin.html" title="Seller Account">
+        <i class="fas fa-user-cog"></i>
+      </a>
+      <i class="fas fa-sign-out-alt" title="Logout"></i>
+    </div>
+  </header>
+
+  <!-- ✅ المنتجات -->
+  <main class="product-grid">
+    <div class="product-card">
+      <a href="womenEdit.html">
+        <img src="./image/Image 11.png" alt="Utility Jacket">
+        <h3>Utility Jacket</h3>
+        <p>145sr</p>
+      </a>
+    </div>
+
+    <div class="product-card">
+      <a href="womenEdit.html">
+        <img src="./image/Image 10.png" alt="Classic Hoodie">
+        <h3>Classic Hoodie</h3>
+        <p>89sr</p>
+      </a>
+    </div>
+
+    <div class="product-card">
+      <a href="womenEdit.html">
+        <img src="./image/Image 9.png" alt="Kids Denim Jacket">
+        <h3>Jacket</h3>
+        <p>99sr</p>
+      </a>
+    </div>
+
+    <div class="product-card">
+      <a href="womenEdit.html">
+        <img src="./image/10.png" alt="Kids T-Shirt">
+        <h3> T-Shirt</h3>
+        <p>39sr</p>
+      </a>
+    </div>
+
+    <div class="product-card">
+      <a href="womenEdit.html">
+        <img src="./image/9.png" alt="Summer Shorts">
+        <h3>Summer Dress </h3>
+        <p>55sr</p>
+      </a>
+    </div>
+  </main>
+
+  <!-- ✅ JavaScript لتفعيل القائمة المنسدلة -->
+  <script>
+    function toggleDropdown(event, dropdownId) {
+      event.preventDefault();
+      event.stopPropagation();
+
+      document.querySelectorAll('.dropdown-content').forEach(drop => drop.classList.remove('show'));
+      const dropdown = document.getElementById(dropdownId);
+      dropdown.classList.toggle("show");
+    }
+
+    window.addEventListener("click", function(e) {
+      if (!e.target.closest('.dropdown')) {
+        document.querySelectorAll('.dropdown-content').forEach(drop => drop.classList.remove('show'));
+      }
+    });
+  </script>
+
+</body>
+</html>

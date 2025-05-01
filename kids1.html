@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Linen Cropped Utility Jacket - Dealora</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body class="catalog-page">
+
+  <!-- ✅ الهيدر الموحد -->
+  <header class="main-header">
+     <div class="left-side">
+      <a href="home.html" class="logo">DEALORA</a>
+      <nav class="nav">
+
+      </nav>
+      
+
+        <!-- NEW IN Dropdown -->
+        <div class="dropdown">
+          <a href="#" onclick="toggleDropdown(event, 'newinDropdown')">NEW IN</a>
+          <div class="dropdown-content" id="newinDropdown">
+            <div class="column">
+              <h4>New In</h4>
+              <a href="#">New Arrivals</a>
+              <a href="#">Trending Now</a>
+              <a href="#">This Week’s Picks</a>
+              <a href="#">Limited Edition</a>
+              <a href="#">Back in Stock</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- SHOP Dropdown -->
+        <div class="dropdown">
+          <a href="#" onclick="toggleDropdown(event, 'shopDropdown')">SHOP</a>
+          <div class="dropdown-content" id="shopDropdown">
+            <div class="column">
+              <h4>Games</h4>
+              <a href="#">PlayStation</a>
+              <a href="#">Xbox</a>
+              <a href="#">Nintendo</a>
+            </div>
+            <div class="column">
+              <a href="catalog.html"><h4>CATALOG</h4></a>
+              <a href="men.html">Men</a>
+              <a href="women.html">Women</a>
+              <a href="kids.html">Kids</a>
+            </div>
+            <div class="column">
+              <h4>Electronics</h4>
+              <a href="#">Phones</a>
+              <a href="#">Laptops</a>
+              <a href="#">Accessories</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- STYLE & TRUTH Dropdown -->
+        <div class="dropdown">
+          <a href="#" onclick="toggleDropdown(event, 'styleDropdown')">STYLE & TRUTH</a>
+          <div class="dropdown-content" id="styleDropdown">
+            <div class="column">
+              <h4>Style & Truth</h4>
+              <a href="#">Style Guides</a>
+              <a href="#">What’s Hot</a>
+              <a href="#">Truth Behind the Trends</a>
+              <a href="#">Sustainability</a>
+              <a href="#">Editor’s Picks</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- DISCOVER Dropdown -->
+        <div class="dropdown">
+          <a href="#" onclick="toggleDropdown(event, 'discoverDropdown')">DISCOVER</a>
+          <div class="dropdown-content" id="discoverDropdown">
+            <div class="column">
+              <h4>Discover</h4>
+              <a href="#">Featured Brands</a>
+              <a href="#">Influencer Favorites</a>
+              <a href="#">Style Stories</a>
+              <a href="#">Seasonal Collections</a>
+              <a href="#">Gift Ideas</a>
+            </div>
+          </div>
+        </div>
+
+      
+
+      </nav>
+    </div>
+    <div class="right-side">
+      <div class="search-container">
+        <i class="fas fa-search"></i>
+        <input type="text" placeholder="Search">
+      </div>
+      <i class="fas fa-heart"></i>
+      <a href="signin.html" title="Account">
+        <i class="fas fa-user"></i>
+      </a>
+      <i class="fas fa-bag-shopping"></i>
+    </div>
+  </header>
+
+  <!-- ✅ تفاصيل المنتج -->
+  <div class="product-detail">
+    <img id="product-image" src="" alt="Product Image">
+    <div class="product-info">
+      <p>LISA ARMSTRONG EDIT</p>
+      <h2 id="product-name">Product Name</h2>
+      <p class="price" id="product-price">000sr</p>
+
+      <div class="colors">
+        <p>Colour: Brown</p>
+        <span class="color-circle color-brown"></span>
+        <span class="color-circle color-gray"></span>
+      </div>
+
+      <div class="sizes">
+        <p>Size:</p>
+        <button>6</button><button>8</button><button>10</button>
+        <button>12</button><button>14</button><button>16</button><button>18</button>
+      </div>
+
+      <button class="add-to-bag">ADD TO BAG</button>
+      <button class="add-to-bag">Join to Unlock</button>
+    </div>
+  </div>
+
+  <!-- ✅ JavaScript -->
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const image = params.get("image");
+    const name = params.get("name");
+    const price = params.get("price");
+
+    if (image && name && price) {
+      document.getElementById("product-image").src = "./image/" + decodeURIComponent(image);
+      document.getElementById("product-name").textContent = decodeURIComponent(name);
+      document.getElementById("product-price").textContent = decodeURIComponent(price);
+    }
+
+    // تفعيل اختيار اللون فقط (بدون تغيير الصورة)
+    document.querySelectorAll('.color-circle').forEach(circle => {
+      circle.addEventListener('click', () => {
+        document.querySelectorAll('.color-circle').forEach(c => c.classList.remove('selected'));
+        circle.classList.add('selected');
+      });
+    });
+
+    // تفعيل اختيار المقاس
+    document.querySelectorAll('.sizes button').forEach(button => {
+      button.addEventListener('click', () => {
+        document.querySelectorAll('.sizes button').forEach(b => b.classList.remove('selected'));
+        button.classList.add('selected');
+      });
+    });
+
+    // تفعيل القوائم المنسدلة
+    function toggleDropdown(event, id) {
+      event.preventDefault();
+      event.stopPropagation();
+      document.querySelectorAll('.dropdown-content').forEach(el => {
+        if (el.id !== id) el.classList.remove("show");
+      });
+      const dropdown = document.getElementById(id);
+      if (dropdown) dropdown.classList.toggle("show");
+    }
+
+    window.addEventListener("click", function (e) {
+      if (!e.target.closest('.dropdown')) {
+        document.querySelectorAll('.dropdown-content').forEach(el => {
+          el.classList.remove("show");
+        });
+      }
+    });
+  </script>
+
+</body>
+</html>
