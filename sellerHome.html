@@ -5,6 +5,44 @@
   <title>Dealora | Seller</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link rel="stylesheet" href="styles.css">
+  <style>
+    /* ✅ تنسيق dropdown */
+    .dropdown {
+      position: relative;
+      display: inline-block;
+    }
+
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      background-color: white;
+      min-width: 180px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      z-index: 1000;
+      padding: 10px;
+      flex-direction: column;
+    }
+
+    .dropdown-content.show {
+      display: flex;
+      gap: 20px;
+    }
+
+    .dropdown-content .column {
+      padding: 10px;
+    }
+
+    .dropdown-content a {
+      color: black;
+      padding: 6px 10px;
+      text-decoration: none;
+      display: block;
+    }
+
+    .dropdown-content a:hover {
+      background-color: #f2f2f2;
+    }
+  </style>
 </head>
 <body>
   <div class="">
@@ -13,14 +51,25 @@
       <div class="left-side">
         <div class="logo">DEALORA</div>
         <nav class="nav">
-          <a href="#">DASHBOARD</a>
 
-          <!-- ✅ قائمة PRODUCTS المنسدلة -->
+          <!-- ✅ DASHBOARD -->
+          <div class="dropdown">
+            <a href="#" onclick="toggleDropdown(event, 'dashboardDropdown')">DASHBOARD</a>
+            <div class="dropdown-content" id="dashboardDropdown">
+              <div class="column">
+                <a href="#">Overview</a>
+                <a href="#">Traffic</a>
+                <a href="#">Engagement</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- ✅ PRODUCTS -->
           <div class="dropdown">
             <a href="#" onclick="toggleDropdown(event, 'productDropdown')">PRODUCTS</a>
             <div class="dropdown-content" id="productDropdown">
               <div class="column">
-                <a href="Seller Product Management.html"><h4>All Products</h4></a>
+                <a href="allproudct.html"><h4>All Products</h4></a>
                 <a href="menseller.html">Men</a>
                 <a href="womenseller.html">Women</a>
                 <a href="Kidsseller.html">Kids</a>
@@ -28,36 +77,58 @@
             </div>
           </div>
 
-          <a href="#">ORDERS</a>
-          <a href="#">REVIEWS</a>
-        </nav>
-
-        <!-- ✅ قائمة SELLER MENU المنسدلة -->
-        <div class="dropdown">
-          <a href="#" onclick="toggleDropdown(event, 'shopDropdown')">SELLER MENU</a>
-          <div class="dropdown-content" id="shopDropdown">
-            <div class="column">
-              <h4>Manage</h4>
-              <a href="#">Add Product</a>
-              <a href="#">View Inventory</a>
-              <a href="#">Edit Listings</a>
-            </div>
-
-            <div class="column">
-              <h4>Orders</h4>
-              <a href="#">Pending</a>
-              <a href="#">Shipped</a>
-              <a href="#">Returns</a>
-            </div>
-
-            <div class="column">
-              <h4>Reports</h4>
-              <a href="#">Sales</a>
-              <a href="#">Revenue</a>
-              <a href="#">Performance</a>
+          <!-- ✅ ORDERS -->
+          <div class="dropdown">
+            <a href="#" onclick="toggleDropdown(event, 'ordersDropdown')">ORDERS</a>
+            <div class="dropdown-content" id="ordersDropdown">
+              <div class="column">
+                <a href="#">Pending</a>
+                <a href="#">Shipped</a>
+                <a href="#">Cancelled</a>
+              </div>
             </div>
           </div>
-        </div>
+
+          <!-- ✅ REVIEWS -->
+          <div class="dropdown">
+            <a href="#" onclick="toggleDropdown(event, 'reviewsDropdown')">REVIEWS</a>
+            <div class="dropdown-content" id="reviewsDropdown">
+              <div class="column">
+                <a href="#">Product Reviews</a>
+                <a href="#">Seller Ratings</a>
+                <a href="#">Feedback</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- ✅ SELLER MENU -->
+          <div class="dropdown">
+            <a href="#" onclick="toggleDropdown(event, 'sellerDropdown')">SELLER MENU</a>
+            <div class="dropdown-content" id="sellerDropdown">
+              <div class="column">
+                <h4>Manage</h4>
+                <a href="#">Add Product</a>
+                <a href="#">View Inventory</a>
+                <a href="#">Edit Listings</a>
+              </div>
+
+              <div class="column">
+                <h4>Orders</h4>
+                <a href="#">Pending</a>
+                <a href="#">Shipped</a>
+                <a href="#">Returns</a>
+              </div>
+
+              <div class="column">
+                <h4>Reports</h4>
+                <a href="#">Sales</a>
+                <a href="#">Revenue</a>
+                <a href="#">Performance</a>
+              </div>
+            </div>
+          </div>
+
+        </nav>
       </div>
 
       <!-- ✅ اليمين: البحث وأيقونات البائع -->
@@ -76,7 +147,7 @@
 
     <div class="content">
       <h1>WELCOME SELLER</h1>
-      <button class="shop-now">MANAGE STORE</button>
+      <a href="allproudct.html" class="shop-now">SHOP NOW</a>
     </div>
   </div>
 
@@ -86,14 +157,14 @@
       event.preventDefault();
       event.stopPropagation();
 
-      // اغلاق جميع القوائم أولاً
+      // اغلاق كل القوائم قبل فتح واحدة جديدة
       document.querySelectorAll('.dropdown-content').forEach(drop => drop.classList.remove('show'));
 
-      // فتح القائمة المطلوبة
       const dropdown = document.getElementById(dropdownId);
       dropdown.classList.toggle("show");
     }
 
+    // اغلاق القوائم إذا ضغطت خارجها
     window.addEventListener("click", function(e) {
       document.querySelectorAll('.dropdown-content').forEach(drop => {
         if (!e.target.closest(".dropdown")) {

@@ -122,20 +122,23 @@
   }
   
   .shop-now {
-    margin-top: 40px;
-    font-size: 14px;
-    background: none;
-    border: 1px solid white;
+    display: inline-block;
+    background-color: black;
     color: white;
-    padding: 12px 24px;
+    padding: 12px 30px;
+    font-size: 18px;
+    border: none;
     cursor: pointer;
-    transition: 0.3s ease;
+    text-decoration: none;
+    border-radius: 5px;
+    margin-top: 20px;
+    transition: background-color 0.3s ease;
   }
   
   .shop-now:hover {
-    background-color: white;
-    color: black;
+    background-color: #333;
   }
+  
   
   /* صفحة تسجيل الدخول */
   .container {
