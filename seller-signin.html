@@ -8,14 +8,12 @@
 </head>
 <body>
 
-  <!-- ✅ الهيدر مثل باقي الصفحات -->
+  <!-- ✅ Header -->
   <header>
     <div class="left-side">
       <a href="sellerHome.html" class="logo">DEALORA</a>
       <nav class="nav">
         <a href="#">NEW IN</a>
-
-        <!-- قائمة SHOP -->
         <div class="dropdown">
           <a href="#" onclick="toggleDropdown(event)">SHOP</a>
           <div class="dropdown-content" id="shopDropdown">
@@ -39,7 +37,6 @@
             </div>
           </div>
         </div>
-
         <a href="#">STYLE & TRUTH</a>
         <a href="#">DISCOVER</a>
         <a href="#">OUTLET</a>
@@ -59,41 +56,41 @@
     </div>
   </header>
 
-  <!-- ✅ صفحة تسجيل دخول البائع -->
+  <!-- ✅ Sign-in section -->
   <div style="display: flex; height: 100vh; margin-top: 80px;">
-    <!-- ✅ الصورة -->
     <div style="flex: 1;">
       <img src="./image/Image 1.png" alt="Seller Image" style="width: 100%; height: 100%; object-fit: cover;">
     </div>
 
-    <!-- ✅ نموذج تسجيل الدخول -->
     <div style="flex: 1; padding: 100px 80px;">
       <h2 style="font-weight: bold;">Seller Sign in</h2>
 
-      <input type="email" placeholder="Email" style="display: block; width: 100%; margin: 20px 0; padding: 10px;">
-      <input type="password" placeholder="Password" style="display: block; width: 100%; margin-bottom: 10px; padding: 10px;">
-      <a href="#" style="font-size: 12px;">Forgotten your password?</a>
+      <!-- ✅ Form directly navigates to sellerHome.html -->
+      <form action="sellerHome.html" method="GET">
+        <input type="email" name="email" placeholder="Email" required style="display: block; width: 100%; margin: 20px 0; padding: 10px;">
+        <input type="password" name="password" placeholder="Password" required style="display: block; width: 100%; margin-bottom: 10px; padding: 10px;">
+        <a href="#" style="font-size: 12px;">Forgotten your password?</a>
 
-      <a href="sellerHome.html" style="display: block; text-align: center; width: 100%; margin-top: 20px; background: black; color: white; padding: 10px; border: none; text-decoration: none; font-weight: bold;">
-        SIGN IN
-      </a>
-      
+        <button type="submit" style="display: block; width: 100%; margin-top: 20px; background: black; color: white; padding: 10px; border: none; font-weight: bold;">
+          SIGN IN
+        </button>
+      </form>
 
       <div style="margin-top: 50px;">
         <h3 style="font-weight: bold;">Register as Seller</h3>
         <p>Create an account to manage your products, view orders, and track your performance.</p>
 
-        <!-- ✅ رابط التسجيل -->
-        <a href="create-seller-account.html" style="display: inline-block; background: black; color: white; padding: 10px 20px; border: none; text-decoration: none; font-weight: bold;">
+        <a href="create-seller-account.html" style="display: inline-block; background: black; color: white; padding: 10px 20px; text-decoration: none; font-weight: bold;">
           CREATE SELLER ACCOUNT
         </a>
         <a href="signin.html" style="text-decoration: underline; font-weight: bold;">
-            Sign in as a costmer
+          Sign in as a customer
+        </a>
       </div>
     </div>
   </div>
 
-  <!-- ✅ JavaScript للقائمة -->
+  <!-- ✅ Only dropdown JavaScript remains -->
   <script>
     function toggleDropdown(event) {
       event.preventDefault();
@@ -102,12 +99,13 @@
       dropdown.classList.toggle("show");
     }
 
-    window.addEventListener("click", function(e) {
+    window.addEventListener("click", function (e) {
       const dropdown = document.getElementById("shopDropdown");
       if (!e.target.closest(".dropdown")) {
         dropdown.classList.remove("show");
       }
     });
   </script>
+
 </body>
 </html>
