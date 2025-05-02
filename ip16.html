@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>iPhone 16 - Dealora</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body class="catalog-page">
+
+  <header class="main-header">
+    <div class="left-side">
+      <a href="home.html" class="logo">DEALORA</a>
+      <nav class="nav">
+
+        <div class="dropdown">
+          <a href="#" onclick="toggleDropdown(event, 'newinDropdown')">NEW IN</a>
+          <div class="dropdown-content" id="newinDropdown">
+            <div class="column">
+              <h4>New In</h4>
+              <a href="#">New Arrivals</a>
+              <a href="#">Trending Now</a>
+              <a href="#">This Week’s Picks</a>
+              <a href="#">Limited Edition</a>
+              <a href="#">Back in Stock</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="dropdown">
+          <a href="#" onclick="toggleDropdown(event, 'shopDropdown')">SHOP</a>
+          <div class="dropdown-content" id="shopDropdown">
+            <div class="column">
+              <h4>Games</h4>
+              <a href="playstation5.html">PlayStation</a>
+              <a href="xb.html">Xbox Series X</a>
+              <a href="ns.html">Nintendo Switch</a>
+            </div>
+            <div class="column">
+              <a href="catalog.html"><h4>CATALOG</h4></a>
+              <a href="men.html">Men</a>
+              <a href="women.html">Women</a>
+              <a href="kids.html">Kids</a>
+            </div>
+            <div class="column">
+              <h4>Electronics</h4>
+              <a href="ip16.html">Phones</a>
+              <a href="#">Laptops</a>
+              <a href="#">Accessories</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="dropdown">
+          <a href="#" onclick="toggleDropdown(event, 'styleDropdown')">STYLE & TRUTH</a>
+          <div class="dropdown-content" id="styleDropdown">
+            <div class="column">
+              <h4>Style & Truth</h4>
+              <a href="#">Style Guides</a>
+              <a href="#">What’s Hot</a>
+              <a href="#">Truth Behind the Trends</a>
+              <a href="#">Sustainability</a>
+              <a href="#">Editor’s Picks</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="dropdown">
+          <a href="#" onclick="toggleDropdown(event, 'discoverDropdown')">DISCOVER</a>
+          <div class="dropdown-content" id="discoverDropdown">
+            <div class="column">
+              <h4>Discover</h4>
+              <a href="#">Featured Brands</a>
+              <a href="#">Influencer Favorites</a>
+              <a href="#">Style Stories</a>
+              <a href="#">Seasonal Collections</a>
+              <a href="#">Gift Ideas</a>
+            </div>
+          </div>
+        </div>
+
+      </nav>
+    </div>
+    <div class="right-side">
+      <div class="search-container">
+        <i class="fas fa-search"></i>
+        <input type="text" placeholder="Search">
+      </div>
+      <i class="fas fa-heart"></i>
+      <a href="signin.html" title="Account">
+        <i class="fas fa-user"></i>
+      </a>
+      <i class="fas fa-bag-shopping"></i>
+    </div>
+  </header>
+
+  <div class="product-detail">
+    <img id="product-image" src="./image/ip16.jpg" alt="iPhone 16">
+    <div class="product-info">
+      <p>Smartphones</p>
+      <h2 id="product-name">iPhone 16</h2>
+      <p class="price" id="product-price">Starting from 2996.25 SAR</p>
+
+      <div class="colors">
+        <p>Colour:</p>
+        <button class="color-option" data-color="ultramarine">Ultramarine</button>
+        <button class="color-option" data-color="teal">Teal</button>
+        <button class="color-option" data-color="pink">Pink</button>
+        <button class="color-option" data-color="white">White</button>
+        <button class="color-option" data-color="black">Black</button>
+      </div>
+
+      <div class="sizes">
+        <p>Model:</p>
+        <button class="size-option" data-size="16">iPhone 16</button>
+        <button class="size-option" data-size="16-plus">iPhone 16 Plus</button>
+      </div>
+
+      <div class="storage">
+        <p>Storage:</p>
+        <button class="storage-option" data-storage="128gb">128GB</button>
+        <button class="storage-option" data-storage="256gb">256GB</button>
+        <button class="storage-option" data-storage="512gb">512GB</button>
+      </div>
+
+      <button class="add-to-bag">ADD TO BAG</button>
+      <button class="add-to-bag">Join to Unlock</button>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const productImage = document.getElementById("product-image");
+      const productName = document.getElementById("product-name");
+      const productPrice = document.getElementById("product-price");
+
+      if (productImage) productImage.src = "./image/ip16.jpg";
+      if (productName) productName.textContent = "iPhone 16";
+      if (productPrice) productPrice.textContent = "Starting from 2996.25 SAR";
+
+      // Color option selection
+      document.querySelectorAll('.color-option').forEach(button => {
+        button.addEventListener('click', function() {
+          document.querySelectorAll('.color-option').forEach(btn => btn.classList.remove('selected'));
+          this.classList.add('selected');
+          const selectedColor = this.dataset.color;
+          console.log('Selected color:', selectedColor);
+          // You can add logic here to update the displayed image or price based on color
+        });
+      });
+
+      // Size (Model) selection
+      document.querySelectorAll('.size-option').forEach(button => {
+        button.addEventListener('click', function() {
+          document.querySelectorAll('.size-option').forEach(btn => btn.classList.remove('selected'));
+          this.classList.add('selected');
+          const selectedSize = this.dataset.size;
+          console.log('Selected model:', selectedSize);
+          // You can add logic here to update the displayed price based on the model
+        });
+      });
+
+      // Storage selection
+      document.querySelectorAll('.storage-option').forEach(button => {
+        button.addEventListener('click', function() {
+          document.querySelectorAll('.storage-option').forEach(btn => btn.classList.remove('selected'));
+          this.classList.add('selected');
+          const selectedStorage = this.dataset.storage;
+          console.log('Selected storage:', selectedStorage);
+          // You can add logic here to update the displayed price based on storage
+        });
+      });
+    });
+
+    // Dropdown toggle function (same as before)
+    function toggleDropdown(event, id) {
+      event.preventDefault();
+      event.stopPropagation();
+      document.querySelectorAll('.dropdown-content').forEach(el => {
+        if (el.id !== id) el.classList.remove("show");
+      });
+      const dropdown = document.getElementById(id);
+      if (dropdown) dropdown.classList.toggle("show");
+    }
+
+    window.addEventListener("click", function (e) {
+      if (!e.target.closest('.dropdown')) {
+        document.querySelectorAll('.dropdown-content').forEach(el => {
+          el.classList.remove("show");
+        });
+      }
+    });
+  </script>
+
+</body>
+</html>
