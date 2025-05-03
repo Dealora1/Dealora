@@ -2,20 +2,17 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Dealora | Create Seller Account</title>
+  <title>Dealora | Create Buyer Account</title>
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
 
-  <!-- ✅ الهيدر -->
   <header>
     <div class="left-side">
       <a href="home.html" class="logo">DEALORA</a>
       <nav class="nav">
         <a href="#">NEW IN</a>
-
-        <!-- قائمة SHOP -->
         <div class="dropdown">
           <a href="#" onclick="toggleDropdown(event)">SHOP</a>
           <div class="dropdown-content" id="shopDropdown">
@@ -39,7 +36,6 @@
             </div>
           </div>
         </div>
-
         <a href="#">STYLE & TRUTH</a>
         <a href="#">DISCOVER</a>
         <a href="#">OUTLET</a>
@@ -52,20 +48,17 @@
         <input type="text" placeholder="Search">
       </div>
       <i class="fas fa-heart" title="Favorites"></i>
-      <a href="signin.html" title="Account">
-        <i class="fas fa-user"></i>
-      </a>
+      <a href="signin.html" title="Account"><i class="fas fa-user"></i></a>
       <i class="fas fa-bag-shopping" title="Cart"></i>
     </div>
   </header>
 
-  <!-- ✅ نموذج إنشاء حساب بائع -->
   <div class="container" style="max-width: 500px; margin: 120px auto; background: white; padding: 40px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
     <h2 style="text-align: center; margin-bottom: 30px;">Create Account</h2>
 
-    <form>
-      <label for="storeName">Store / Business Name</label>
-      <input type="text" id="storeName" name="storeName" placeholder="Enter your store name" required style="width: 100%; padding: 10px; margin-bottom: 15px;">
+    <form id="buyerRegisterForm">
+      <label for="storeName">Name</label>
+      <input type="text" id="storeName" name="storeName" placeholder="Enter your name" required style="width: 100%; padding: 10px; margin-bottom: 15px;">
 
       <label for="email">Email</label>
       <input type="email" id="email" name="email" placeholder="Enter your email" required style="width: 100%; padding: 10px; margin-bottom: 15px;">
@@ -79,21 +72,14 @@
       <label for="confirm">Confirm Password</label>
       <input type="password" id="confirm" name="confirm" placeholder="Re-enter password" required style="width: 100%; padding: 10px; margin-bottom: 15px;">
 
-      <label for="category">Product Category (Optional)</label>
-      <input type="text" id="category" name="category" placeholder="e.g. Fashion, Electronics" style="width: 100%; padding: 10px; margin-bottom: 15px;">
-
       <label style="display: block; margin-bottom: 20px;">
         <input type="checkbox" required> I agree to the terms and conditions
       </label>
 
-      <a href="home.html" style="display: block; text-align: center; background: black; color: white; padding: 12px; text-decoration: none; font-weight: bold;">
-        CREATE ACCOUNT
-      </a>
-      
+      <button type="submit" style="width: 100%; background: black; color: white; padding: 12px; border: none; font-weight: bold;">CREATE ACCOUNT</button>
     </form>
   </div>
 
-  <!-- ✅ JavaScript للقائمة -->
   <script>
     function toggleDropdown(event) {
       event.preventDefault();
@@ -108,6 +94,34 @@
         dropdown.classList.remove("show");
       }
     });
+
+    // ✅ Form submit to backend
+    document.getElementById('buyerRegisterForm').addEventListener('submit', async function (e) {
+      e.preventDefault();
+
+      const username = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      const confirm = document.getElementById('confirm').value;
+
+      if (password !== confirm) {
+        alert("Passwords do not match!");
+        return;
+      }
+
+      const response = await fetch('http://localhost:3000/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password, role: 'buyer' })
+      });
+
+      const result = await response.json();
+      if (response.ok) {
+        window.location.href = 'home.html';
+      } else {
+        alert(result.message || 'Registration failed.');
+      }
+    });
   </script>
+
 </body>
 </html>

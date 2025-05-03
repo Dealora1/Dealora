@@ -8,14 +8,13 @@
 </head>
 <body>
 
-  <!-- ✅ Header -->
   <header>
     <div class="left-side">
       <a href="sellerHome.html" class="logo">DEALORA</a>
       <nav class="nav">
         <a href="#">NEW IN</a>
         <div class="dropdown">
-          <a href="#" onclick="toggleDropdown(event)">SHOP</a>
+          <a href="#">SHOP</a>
           <div class="dropdown-content" id="shopDropdown">
             <div class="column">
               <h4>Games</h4>
@@ -56,7 +55,6 @@
     </div>
   </header>
 
-  <!-- ✅ Sign-in section -->
   <div style="display: flex; height: 100vh; margin-top: 80px;">
     <div style="flex: 1;">
       <img src="./image/Image 1.png" alt="Seller Image" style="width: 100%; height: 100%; object-fit: cover;">
@@ -65,10 +63,9 @@
     <div style="flex: 1; padding: 100px 80px;">
       <h2 style="font-weight: bold;">Seller Sign in</h2>
 
-      <!-- ✅ Form directly navigates to sellerHome.html -->
-      <form action="sellerHome.html" method="GET">
-        <input type="email" name="email" placeholder="Email" required style="display: block; width: 100%; margin: 20px 0; padding: 10px;">
-        <input type="password" name="password" placeholder="Password" required style="display: block; width: 100%; margin-bottom: 10px; padding: 10px;">
+      <form id="sellerLoginForm">
+        <input type="email" id="email" placeholder="Email" required style="display: block; width: 100%; margin: 20px 0; padding: 10px;">
+        <input type="password" id="password" placeholder="Password" required style="display: block; width: 100%; margin-bottom: 10px; padding: 10px;">
         <a href="#" style="font-size: 12px;">Forgotten your password?</a>
 
         <button type="submit" style="display: block; width: 100%; margin-top: 20px; background: black; color: white; padding: 10px; border: none; font-weight: bold;">
@@ -90,20 +87,32 @@
     </div>
   </div>
 
-  <!-- ✅ Only dropdown JavaScript remains -->
   <script>
-    function toggleDropdown(event) {
-      event.preventDefault();
-      event.stopPropagation();
-      const dropdown = document.getElementById("shopDropdown");
-      dropdown.classList.toggle("show");
+    async function loginSeller(email, password) {
+      const res = await fetch('http://localhost:3000/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username: email, password }),
+      });
+      return await res.json();
     }
 
-    window.addEventListener("click", function (e) {
-      const dropdown = document.getElementById("shopDropdown");
-      if (!e.target.closest(".dropdown")) {
-        dropdown.classList.remove("show");
-      }
+    document.addEventListener('DOMContentLoaded', () => {
+      const form = document.getElementById('sellerLoginForm');
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+
+        const result = await loginSeller(email, password);
+
+        if (result && result.role === 'seller') {
+          window.location.href = 'sellerHome.html';
+        } else {
+          alert('Login failed. Please check your email and password.');
+        }
+      });
     });
   </script>
 
