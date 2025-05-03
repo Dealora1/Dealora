@@ -129,6 +129,16 @@
         document.querySelectorAll('.dropdown-content').forEach(drop => drop.classList.remove('show'));
       }
     });
+    import { fetchProducts } from './api.js';
+
+    import { fetchProducts } from './api.js';
+
+window.addEventListener('DOMContentLoaded', async () => {
+  const products = await fetchProducts();
+  console.log('📦 Products:', products);
+  // Optionally: Display them inside a container
+  // Example: document.getElementById('productList').innerHTML = ...
+});
   </script>
 
 </body>
