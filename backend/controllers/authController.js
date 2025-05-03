@@ -1,6 +1,6 @@
 const User = require('../models/userModel');
 
-// ✅ Registration logic
+// ✅ Register new user
 exports.register = async (req, res) => {
   const { username, password, role } = req.body;
 
@@ -19,18 +19,24 @@ exports.register = async (req, res) => {
   res.status(201).json({ message: 'User registered successfully', userId: user._id });
 };
 
-// ✅ Login logic
+// ✅ Login existing user
 exports.login = async (req, res) => {
   const { username, password } = req.body;
 
-  if (!username || !password) {
-    return res.status(400).json({ message: 'Username and password are required' });
-  }
-
-  const user = await User.findOne({ username });
-  if (!user || user.password !== password) {
+  const user = await User.findOne({ username, password });
+  if (!user) {
     return res.status(401).json({ message: 'Invalid credentials' });
   }
 
   res.status(200).json({ message: 'Login successful', role: user.role });
+};
+
+// ✅ Get all users (for Postman testing or admin panel)
+exports.getAllUsers = async (req, res) => {
+  try {
+    const users = await User.find({});
+    res.json(users);
+  } catch (err) {
+    res.status(500).json({ message: 'Failed to fetch users' });
+  }
 };
