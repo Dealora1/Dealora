@@ -33,7 +33,7 @@
           <a href="#" onclick="toggleDropdown(event, 'shopDropdown')">SHOP</a>
           <div class="dropdown-content" id="shopDropdown">
             <div class="column">
-            <a href="Games.html"> <h4>Games</h4> </a> 
+              <a href="Games.html"><h4>Games</h4></a> 
               <a href="playstation.html">PlayStation</a>
               <a href="xbox.html">Xbox</a>
               <a href="Nintendo.html">Nintendo</a>
@@ -49,36 +49,6 @@
               <a href="#">Phones</a>
               <a href="#">Laptops</a>
               <a href="#">Accessories</a>
-            </div>
-          </div>
-        </div>
-
-        <!-- STYLE & TRUTH Dropdown -->
-        <div class="dropdown">
-          <a href="#" onclick="toggleDropdown(event, 'styleDropdown')">STYLE & TRUTH</a>
-          <div class="dropdown-content" id="styleDropdown">
-            <div class="column">
-             <a href="STYLE & TRUTH.html"> <h4>Style & Truth</h4> </a>
-              <a href="#">Style Guides</a>
-              <a href="#">What’s Hot</a>
-              <a href="#">Truth Behind the Trends</a>
-              <a href="#">Sustainability</a>
-              <a href="#">Editor’s Picks</a>
-            </div>
-          </div>
-        </div>
-
-        <!-- DISCOVER Dropdown -->
-        <div class="dropdown">
-          <a href="#" onclick="toggleDropdown(event, 'discoverDropdown')">DISCOVER</a>
-          <div class="dropdown-content" id="discoverDropdown">
-            <div class="column">
-          <a href="DISCOVER.html">  <h4>Discover</h4></a>
-              <a href="#">Featured Brands</a>
-              <a href="#">Influencer Favorites</a>
-              <a href="#">Style Stories</a>
-              <a href="#">Seasonal Collections</a>
-              <a href="#">Gift Ideas</a>
             </div>
           </div>
         </div>
@@ -118,12 +88,16 @@
         <button>12</button><button>14</button><button>16</button><button>18</button>
       </div>
 
+      <!-- ✅ زر الإضافة للسلة -->
       <button class="add-to-bag">ADD TO BAG</button>
-      <button class="add-to-bag">Join to Unlock</button>
+
+      <!-- ✅ زر الانضمام للخصم -->
+      <button id="join-unlock-btn" class="add-to-bag">Join to Unlock</button>
+      <p id="queue-size">🔥 Current queue size: 0</p>
     </div>
   </div>
 
-  <!-- ✅ JavaScript -->
+  <!-- ✅ سكربت إعداد الصفحة -->
   <script>
     const params = new URLSearchParams(window.location.search);
     const image = params.get("image");
@@ -167,6 +141,44 @@
         });
       }
     });
+
+    // ✅ زر Join to Unlock
+    document.getElementById('join-unlock-btn').addEventListener('click', () => {
+      let username = localStorage.getItem('username');
+const productId = document.getElementById("product-name").textContent;
+
+if (!username) {
+  username = prompt("Enter your email to join the queue:");
+  if (!username) return;
+  localStorage.setItem('username', username); // Save it for next time
+}
+
+joinToUnlock(productId, username);
+
+    });
+
+    // ✅ دالة إرسال الطلب
+    function joinToUnlock(productId, username) {
+      fetch('http://localhost:3000/api/unlockqueue', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          productId: productId,
+          email: username
+        })
+      })
+      .then(res => res.json())
+      .then(data => {
+        alert(data.message);
+        document.getElementById("queue-size").textContent = `🔥 Current queue size: ${data.queueLength}`;
+      })
+      .catch(err => {
+        alert("❌ Error joining unlock queue");
+        console.error(err);
+      });
+    }
   </script>
 
 </body>
