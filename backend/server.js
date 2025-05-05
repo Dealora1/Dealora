@@ -6,25 +6,35 @@ const cors = require('cors');
 dotenv.config();
 const app = express();
 
-// Middlewares
-app.use(cors());
+// ✅ Configure CORS before routes
+app.use(cors({
+  origin: 'http://127.0.0.1:5501',  // Match your frontend Live Server origin
+  methods: ['GET', 'POST'],
+  credentials: false
+}));
+
+// ✅ Middleware to parse JSON
 app.use(express.json());
 
-// ✅ Use your routes
+// ✅ Routes
 const authRoutes = require('./routes/authRoutes');
-app.use('/api/auth', authRoutes);  // <-- Make sure this is here
+app.use('/api/auth', authRoutes);
 
-// Connect to MongoDB
-mongoose.connect(process.env.MONGO_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
-.then(() => {
-  console.log('✅ MongoDB connected');
-  app.listen(3000, () => {
-    console.log('✅ Server running on http://localhost:3000');
+const dealRoutes = require('./routes/dealRoutes');
+app.use('/api/deals', dealRoutes);
+
+const unlockQueueRoute = require('./routes/unlockQueueRoute');
+app.use('/api/unlock', unlockQueueRoute);
+
+// ✅ Connect to MongoDB
+mongoose.connect(process.env.MONGO_URI)
+  .then(() => {
+    console.log('✅ MongoDB connected');
+    app.listen(3000, () => {
+      console.log('✅ Server running on http://localhost:3000');
+    });
+  })
+  .catch(err => {
+    console.error('❌ DB connection error:', err);
   });
-})
-.catch((err) => {
-  console.error('❌ DB connection error:', err);
-});
+
