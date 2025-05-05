@@ -7,15 +7,21 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// ✅ استيراد المسارات
 const authRoutes = require('./routes/authRoutes');
-app.use('/api/auth', authRoutes);
-
 const unlockQueueRoutes = require('./routes/unlockqueue');
-app.use('/api/unlock-queue', unlockQueueRoutes); // ✅ أضفنا هذا
+const dealRoutes = require('./routes/deals'); // ✅ أضف هذا السطر
 
+// ✅ استخدام المسارات
+app.use('/api/auth', authRoutes);
+app.use('/api/unlock-queue', unlockQueueRoutes);
+app.use('/api/deals', dealRoutes); // ✅ أضف هذا السطر
+
+// ✅ الاتصال بقاعدة البيانات
 mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log('✅ MongoDB Atlas connected'))
   .catch(err => console.error('❌ MongoDB error:', err));
 
 app.listen(3000, () => console.log(`✅ Server running on http://localhost:3000`));
+
 

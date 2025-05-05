@@ -103,14 +103,21 @@
 
         const data = await res.json();
 
-     
-        if (data.message === "✅ Added to unlock queue") {
-          alert(`✅ Joined the queue! There are now ${data.queueLength} people.`);
-        } else if (data.message === "You have already joined the queue for this product") {
-          alert(`ℹ️ You are already in the queue. Total: ${data.queueLength} people.`);
-        } else {
-          alert("❌ " + data.message);
-        }
+        if (res.ok) {
+  if (data.discountActivated) {
+    alert("🎉 Discount Activated! " + data.queueLength + " users have joined.");
+    document.getElementById("queueInfo").textContent = `🎉 Discount Activated! (${data.queueLength} people)`;
+  } else {
+    alert(`✅ Joined the queue! There are now ${data.queueLength} people.`);
+    document.getElementById("queueInfo").textContent = `🔥 Current queue size: ${data.queueLength}`;
+  }
+} else if (res.status === 409) {
+  alert("ℹ️ " + data.message);
+  document.getElementById("queueInfo").textContent = `🔥 Current queue size: ${data.queueLength}`;
+} else {
+  alert("❌ " + data.message);
+}
+
 
         document.getElementById("queueInfo").textContent = `🔥 Current queue size: ${data.queueLength}`;
       } catch (err) {
@@ -122,4 +129,6 @@
 
 </body>
 </html>
+
+
 
