@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Dealora | Seller Sign In</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+
+  <header>
+    <div class="left-side">
+      <a href="sellerHome.html" class="logo">DEALORA</a>
+      <nav class="nav">
+        <a href="#">NEW IN</a>
+        <div class="dropdown">
+          <a href="#">SHOP</a>
+          <div class="dropdown-content" id="shopDropdown">
+            <div class="column">
+              <h4>Games</h4>
+              <a href="#">PlayStation</a>
+              <a href="#">Xbox</a>
+              <a href="#">Nintendo</a>
+            </div>
+            <div class="column">
+              <a href="catalog.html"><h4>CATALOG</h4></a>
+              <a href="men.html">Men</a>
+              <a href="women.html">Women</a>
+              <a href="kids.html">Kids</a>
+            </div>
+            <div class="column">
+              <h4>Electronics</h4>
+              <a href="#">Phones</a>
+              <a href="#">Laptops</a>
+              <a href="#">Accessories</a>
+            </div>
+          </div>
+        </div>
+        <a href="#">STYLE & TRUTH</a>
+        <a href="#">DISCOVER</a>
+        <a href="#">OUTLET</a>
+      </nav>
+    </div>
+
+    <div class="right-side">
+      <div class="search-container">
+        <i class="fas fa-search"></i>
+        <input type="text" placeholder="Search">
+      </div>
+      <i class="fas fa-heart" title="Favorites"></i>
+      <a href="signin.html" title="Account">
+        <i class="fas fa-user"></i>
+      </a>
+    </div>
+  </header>
+
+  <div style="display: flex; height: 100vh; margin-top: 80px;">
+    <div style="flex: 1;">
+      <img src="./image/Image 1.png" alt="Seller Image" style="width: 100%; height: 100%; object-fit: cover;">
+    </div>
+
+    <div style="flex: 1; padding: 100px 80px;">
+      <h2 style="font-weight: bold;">Seller Sign in</h2>
+
+      <form id="sellerLoginForm">
+        <input type="email" id="email" placeholder="Email" required style="display: block; width: 100%; margin: 20px 0; padding: 10px;">
+        <input type="password" id="password" placeholder="Password" required style="display: block; width: 100%; margin-bottom: 10px; padding: 10px;">
+        <a href="#" style="font-size: 12px;">Forgotten your password?</a>
+
+        <button type="submit" style="display: block; width: 100%; margin-top: 20px; background: black; color: white; padding: 10px; border: none; font-weight: bold;">
+          SIGN IN
+        </button>
+      </form>
+
+      <div style="margin-top: 50px;">
+        <h3 style="font-weight: bold;">Register as Seller</h3>
+        <p>Create an account to manage your products, view orders, and track your performance.</p>
+
+        <a href="create-seller-account.html" style="display: inline-block; background: black; color: white; padding: 10px 20px; text-decoration: none; font-weight: bold;">
+          CREATE SELLER ACCOUNT
+        </a>
+        <a href="signin.html" style="text-decoration: underline; font-weight: bold;">
+          Sign in as a customer
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    async function loginSeller(email, password) {
+      try {
+        const res = await fetch('http://localhost:3000/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username: email, password })
+        });
+
+        const result = await res.json();
+        console.log('Login response:', result); // Debug line
+        return result;
+      } catch (err) {
+        console.error('Login error:', err);
+        return null;
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const form = document.getElementById('sellerLoginForm');
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+
+        const result = await loginSeller(email, password);
+
+        if (result && result.role === 'seller') {
+          window.location.href = 'sellerHome.html';
+        } else {
+          alert('Login failed. Please check your email and password.');
+        }
+      });
+    });
+  </script>
+
+</body>
+</html>
