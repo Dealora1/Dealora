@@ -76,7 +76,8 @@
 
       <a href="#" class="forgot">Forgotten your password?</a>
 
-      <button class="btn" onclick="window.location.href='home.html'">SIGN IN</button>
+      <button class="btn" onclick="signIn()">SIGN IN</button>
+
 
 
       <div class="register">
@@ -97,13 +98,32 @@
 
   <!-- ✅ JavaScript لتفعيل القائمة -->
   <script>
+    //  وظيفة تسجيل الدخول وتخزين البريد الإلكتروني
+    function signIn() {
+      const email = document.querySelector('input[type="email"]').value.trim();
+  
+      if (!email) {
+        alert("⚠️ Please enter your email.");
+        return;
+      }
+  
+      //  تخزين البريد الإلكتروني في Local Storage
+      localStorage.setItem('userEmail', email);
+  
+      //  التأكد من تخزين البريد الإلكتروني بنجاح
+      alert("✅ Logged in successfully!");
+      window.location.href = 'home.html';
+    }
+  
+    //  تفعيل القائمة المنسدلة
     function toggleDropdown(event) {
       event.preventDefault();
       event.stopPropagation();
       const dropdown = document.getElementById("shopDropdown");
       dropdown.classList.toggle("show");
     }
-
+  
+    //  إغلاق القائمة عند الضغط خارجها
     window.addEventListener("click", function(e) {
       const dropdown = document.getElementById("shopDropdown");
       if (!e.target.closest(".dropdown")) {
@@ -111,5 +131,6 @@
       }
     });
   </script>
+  
 </body>
 </html>

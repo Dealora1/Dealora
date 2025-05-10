@@ -63,6 +63,7 @@
       <h2 style="font-weight: bold;">Seller Sign in</h2>
 
       <form id="sellerLoginForm">
+
         <input type="email" id="email" placeholder="Email" required style="display: block; width: 100%; margin: 20px 0; padding: 10px;">
         <input type="password" id="password" placeholder="Password" required style="display: block; width: 100%; margin-bottom: 10px; padding: 10px;">
         <a href="#" style="font-size: 12px;">Forgotten your password?</a>
@@ -85,7 +86,6 @@
       </div>
     </div>
   </div>
-
   <script>
     async function loginSeller(email, password) {
       try {
@@ -94,7 +94,7 @@
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ username: email, password })
         });
-
+  
         const result = await res.json();
         console.log('Login response:', result); // Debug line
         return result;
@@ -103,26 +103,30 @@
         return null;
       }
     }
-
+  
     document.addEventListener('DOMContentLoaded', () => {
       const form = document.getElementById('sellerLoginForm');
-
+  
       form.addEventListener('submit', async (e) => {
         e.preventDefault();
-
-        const email = document.getElementById('email').value;
-        const password = document.getElementById('password').value;
-
+  
+        const email = document.getElementById('email').value.trim();
+        const password = document.getElementById('password').value.trim();
+  
         const result = await loginSeller(email, password);
-
-        if (result && result.role === 'seller') {
+  
+        if (result && result.message === "Login successful" && result.role === 'seller') {
+          alert("✅ Login successful!");
           window.location.href = 'sellerHome.html';
         } else {
-          alert('Login failed. Please check your email and password.');
+          alert('❌ Login failed. Please check your email and password.');
         }
       });
     });
   </script>
+  
+
+  
 
 </body>
 </html>
