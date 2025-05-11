@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Linen Cropped Utility Jacket - Dealora</title>
+  <title>XBOX SERIES EDITION - Dealora</title>
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
@@ -13,7 +13,6 @@
     <div class="left-side">
       <a href="home.html" class="logo">DEALORA</a>
       <nav class="nav">
-        <!-- NEW IN Dropdown -->
         <div class="dropdown">
           <a href="#" onclick="toggleDropdown(event, 'newinDropdown')">NEW IN</a>
           <div class="dropdown-content" id="newinDropdown">
@@ -27,8 +26,6 @@
             </div>
           </div>
         </div>
-
-        <!-- SHOP Dropdown -->
         <div class="dropdown">
           <a href="#" onclick="toggleDropdown(event, 'shopDropdown')">SHOP</a>
           <div class="dropdown-content" id="shopDropdown">
@@ -37,12 +34,6 @@
               <a href="playstation.html">PlayStation</a>
               <a href="xbox.html">Xbox</a>
               <a href="Nintendo.html">Nintendo</a>
-            </div>
-            <div class="column">
-              <a href="catalog.html"><h4>CATALOG</h4></a>
-              <a href="men.html">Men</a>
-              <a href="women.html">Women</a>
-              <a href="kids.html">Kids</a>
             </div>
             <div class="column">
               <h4>Electronics</h4>
@@ -73,11 +64,9 @@
   <div class="product-detail">
     <img id="product-image" src="" alt="Product Image">
     <div class="product-info">
-      <p>XBOX SERIES EDITION</p>
       <h2 id="product-name">Product Name</h2>
       <p class="price" id="product-price">000sr</p>
 
-      <!-- ✅ اللون -->
       <div class="colors">
         <p>Color:</p>
         <span class="color-circle" style="background-color: black;" title="Black"></span>
@@ -85,35 +74,14 @@
         <span class="color-circle" style="background-color: green;" title="Green"></span>
       </div>
 
-      <!-- ✅ النسخة -->
-      <div class="option-group">
-        <p>Model:</p>
-        <div class="option-buttons" id="storage-options">
-          <button>Series X</button>
-          <button>Series S</button>
-          <button>One X</button>
-          <button>One S</button>
-        </div>
-      </div>
-
-      <!-- ✅ الإضافات -->
-      <div class="option-group">
-        <p>Extras:</p>
-        <div class="option-buttons" id="ram-options">
-          <button>Extra Controller</button>
-          <button>Game Pass</button>
-          <button>Charging Dock</button>
-          <button>Stereo Headset</button>
-        </div>
-      </div>
-
       <button class="add-to-bag">ADD TO BAG</button>
-      <button class="add-to-bag">Join to Unlock</button>
+      <button id="joinUnlockBtn" class="add-to-bag">Join to Unlock</button>
+      <p id="queueInfo">🔥 Current queue size: 0</p>
     </div>
   </div>
 
- <!-- ✅ JavaScript -->
- <script>
+  <!-- ✅ JavaScript -->
+  <script>
     const params = new URLSearchParams(window.location.search);
     const image = params.get("image");
     const name = params.get("name");
@@ -125,6 +93,7 @@
       document.getElementById("product-price").textContent = decodeURIComponent(price);
     }
 
+    // ✅ تفعيل اختيار اللون بدون تغيير الصورة
     document.querySelectorAll('.color-circle').forEach(circle => {
       circle.addEventListener('click', () => {
         document.querySelectorAll('.color-circle').forEach(c => c.classList.remove('selected'));
@@ -132,74 +101,78 @@
       });
     });
 
-    function activateSelection(groupId) {
-      document.querySelectorAll(`#${groupId} button`).forEach(button => {
-        button.addEventListener('click', () => {
-          document.querySelectorAll(`#${groupId} button`).forEach(b => b.classList.remove('selected'));
-          button.classList.add('selected');
-        });
-      });
-    }
-
-    activateSelection('storage-options');
-    activateSelection('ram-options');
-
-    // ✅ Add to Cart Logic
+    // ✅ Add to Bag Functionality
     document.querySelector(".add-to-bag").addEventListener("click", () => {
       const selectedColor = document.querySelector('.color-circle.selected');
-      const selectedSize = document.querySelector('.option-buttons button.selected');
-
-      if (!selectedColor || !selectedSize) {
-        alert("Please select both a color and a size.");
+      if (!selectedColor) {
+        alert("Please select a color.");
         return;
       }
 
-      // Create the product object
       const product = {
-        name: decodeURIComponent(name),
-        price: parseFloat(decodeURIComponent(price)),
-        image: decodeURIComponent(image),
+        name: document.getElementById("product-name").textContent,
+        price: document.getElementById("product-price").textContent,
         color: selectedColor.title,
-        size: selectedSize.textContent,
         quantity: 1
       };
 
-      // Retrieve existing cart items from localStorage
       const existingCart = JSON.parse(localStorage.getItem("cartItems")) || [];
-
-      // Add the product to the cart array
       existingCart.push(product);
-
-      // Save the updated cart back to localStorage
       localStorage.setItem("cartItems", JSON.stringify(existingCart));
 
       alert("✅ Product added to your bag!");
     });
 
-    // Dropdown toggle function for navigation menus
-    function toggleDropdown(event, id) {
-      event.preventDefault();
-      event.stopPropagation();
+    // ✅ Initialize Join to Unlock
+    document.addEventListener("DOMContentLoaded", initializeJoinToUnlock);
 
-      // Close all other dropdowns
-      document.querySelectorAll('.dropdown-content').forEach(el => {
-        if (el.id !== id) el.classList.remove("show");
+    function initializeJoinToUnlock() {
+      loadQueueSize();
+      const joinButton = document.getElementById('joinUnlockBtn');
+      joinButton.addEventListener('click', async () => {
+        const email = localStorage.getItem("username");
+        const productId = document.getElementById("product-name").textContent.trim();
+
+        if (!email) {
+          alert("⚠️ Please sign in to join the discount queue.");
+          window.location.href = "signin.html";
+          return;
+        }
+
+        try {
+          const res = await fetch('http://localhost:3000/api/unlock-queue', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, productId })
+          });
+
+          const data = await res.json();
+          if (res.ok) {
+            alert(data.discountActivated ? "🎉 Discount Activated!" : `✅ Joined the queue! ${data.queueLength} users have joined.`);
+            document.getElementById("queueInfo").textContent = `🔥 Current queue size: ${data.queueLength}`;
+          } else {
+            alert("❌ " + data.message);
+          }
+        } catch (err) {
+          alert("❌ Server error");
+          console.error(err);
+        }
       });
-
-      // Open or close the clicked dropdown
-      const target = document.getElementById(id);
-      target.classList.toggle("show");
     }
 
-    // Close dropdowns when clicking outside
-    window.addEventListener("click", function (e) {
-      if (!e.target.closest('.dropdown')) {
-        document.querySelectorAll('.dropdown-content').forEach(el => {
-          el.classList.remove("show");
-        });
+    // ✅ Function to load the current queue size
+    async function loadQueueSize() {
+      const productId = document.getElementById("product-name").textContent.trim();
+      try {
+        const res = await fetch(`http://localhost:3000/api/unlock-queue/queue-size?productId=${encodeURIComponent(productId)}`);
+        const data = await res.json();
+        document.getElementById("queueInfo").textContent = `🔥 Current queue size: ${data.queueLength || 0}`;
+      } catch (err) {
+        console.error("❌ Error loading queue size:", err);
       }
-    });
+    }
   </script>
 
 </body>
 </html>
+

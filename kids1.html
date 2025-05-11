@@ -1,7 +1,5 @@
 <!DOCTYPE html>
-
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
   <title>Linen Cropped Utility Jacket - Dealora</title>
@@ -12,14 +10,9 @@
 
   <!-- ✅ الهيدر الموحد -->
   <header class="main-header">
-     <div class="left-side">
+    <div class="left-side">
       <a href="home.html" class="logo">DEALORA</a>
       <nav class="nav">
-
-      </nav>
-      
-
-        <!-- NEW IN Dropdown -->
         <div class="dropdown">
           <a href="#" onclick="toggleDropdown(event, 'newinDropdown')">NEW IN</a>
           <div class="dropdown-content" id="newinDropdown">
@@ -33,13 +26,11 @@
             </div>
           </div>
         </div>
-
-        <!-- SHOP Dropdown -->
         <div class="dropdown">
           <a href="#" onclick="toggleDropdown(event, 'shopDropdown')">SHOP</a>
           <div class="dropdown-content" id="shopDropdown">
             <div class="column">
-            <a href="Games.html"> <h4>Games</h4></a> 
+              <a href="Games.html"> <h4>Games</h4></a>
               <a href="playstation.html">PlayStation</a>
               <a href="xbox.html">Xbox</a>
               <a href="Nintendo.html">Nintendo</a>
@@ -50,63 +41,16 @@
               <a href="women.html">Women</a>
               <a href="kids.html">Kids</a>
             </div>
-            <div class="column">
-              <h4>Electronics</h4>
-              <a href="#">Phones</a>
-              <a href="#">Laptops</a>
-              <a href="#">Accessories</a>
-            </div>
           </div>
         </div>
-
-        <!-- STYLE & TRUTH Dropdown -->
-        <div class="dropdown">
-          <a href="#" onclick="toggleDropdown(event, 'styleDropdown')">STYLE & TRUTH</a>
-          <div class="dropdown-content" id="styleDropdown">
-            <div class="column">
-             <a href="STYLE & TRUTH.html"> <h4>Style & Truth</h4></a> 
-              <a href="#">Style Guides</a>
-              <a href="#">What’s Hot</a>
-              <a href="#">Truth Behind the Trends</a>
-              <a href="#">Sustainability</a>
-              <a href="#">Editor’s Picks</a>
-            </div>
-          </div>
-        </div>
-
-        <!-- DISCOVER Dropdown -->
-        <div class="dropdown">
-          <a href="#" onclick="toggleDropdown(event, 'discoverDropdown')">DISCOVER</a>
-          <div class="dropdown-content" id="discoverDropdown">
-            <div class="column">
-             <a href="DISCOVER.html"> <h4>Discover</h4></a> 
-              <a href="#">Featured Brands</a>
-              <a href="#">Influencer Favorites</a>
-              <a href="#">Style Stories</a>
-              <a href="#">Seasonal Collections</a>
-              <a href="#">Gift Ideas</a>
-            </div>
-          </div>
-        </div>
-
-      
-
       </nav>
     </div>
     <div class="right-side">
-      <div class="search-container">
-        <i class="fas fa-search"></i>
-        <input type="text" placeholder="Search">
-      </div>
-      <i class="fas fa-heart"></i>
-      <a href="signin.html" title="Account">
-        <i class="fas fa-user"></i>
-      </a>
-      <a href="cart.html" title="Cart">
-        <i class="fas fa-bag-shopping"></i>
-      </a>
-          </div>
+      <a href="signin.html" title="Account"><i class="fas fa-user"></i></a>
+      <a href="cart.html" title="Cart"><i class="fas fa-bag-shopping"></i></a>
+    </div>
   </header>
+
   <!-- ✅ تفاصيل المنتج -->
   <div class="product-detail">
     <img id="product-image" src="" alt="Product Image">
@@ -128,40 +72,60 @@
       </div>
 
       <button class="add-to-bag">ADD TO BAG</button>
-      <button class="add-to-bag">Join to Unlock</button>
+      <button class="add-to-bag" id="joinUnlockBtn">Join to Unlock</button>
+      <p id="queueInfo">🔥 Current queue size: 0</p>
     </div>
   </div>
 
   <!-- ✅ JavaScript -->
   <script>
+    // ✅ Load Product Details from URL Parameters
     const params = new URLSearchParams(window.location.search);
     const image = params.get("image");
     const name = params.get("name");
-    const price = params.get("price");
+    const price = parseFloat(params.get("price"));
 
     if (image && name && price) {
       document.getElementById("product-image").src = "./image/" + decodeURIComponent(image);
       document.getElementById("product-name").textContent = decodeURIComponent(name);
-      document.getElementById("product-price").textContent = decodeURIComponent(price);
+      document.getElementById("product-price").textContent = price + " SAR";
     }
 
-    // تفعيل اختيار اللون فقط (بدون تغيير الصورة)
-    document.querySelectorAll('.color-circle').forEach(circle => {
-      circle.addEventListener('click', () => {
-        document.querySelectorAll('.color-circle').forEach(c => c.classList.remove('selected'));
-        circle.classList.add('selected');
-      });
+    // ✅ Handle Join to Unlock
+    document.getElementById("joinUnlockBtn").addEventListener("click", async () => {
+      const email = localStorage.getItem("username");
+      if (!email) {
+        alert("⚠️ Please sign in to join the discount queue.");
+        window.location.href = "signin.html";
+        return;
+      }
+
+      try {
+        const res = await fetch('http://localhost:3000/api/unlock-queue', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, productId: name })
+        });
+
+        const data = await res.json();
+        if (res.ok) {
+          if (data.discountActivated) {
+            alert("🎉 Discount Activated! " + data.queueLength + " users have joined.");
+            document.getElementById("product-price").textContent = (price * 0.5).toFixed(2) + " SAR";
+          } else {
+            alert(`✅ Joined the queue! ${data.queueLength} users have joined.`);
+            document.getElementById("queueInfo").textContent = `🔥 Current queue size: ${data.queueLength}`;
+          }
+        } else {
+          alert("❌ " + data.message);
+        }
+      } catch (err) {
+        alert("❌ Server error");
+        console.error(err);
+      }
     });
 
-    // تفعيل اختيار المقاس
-    document.querySelectorAll('.sizes button').forEach(button => {
-      button.addEventListener('click', () => {
-        document.querySelectorAll('.sizes button').forEach(b => b.classList.remove('selected'));
-        button.classList.add('selected');
-      });
-    });
-
-    // تفعيل القوائم المنسدلة
+    // ✅ Toggle Dropdowns
     function toggleDropdown(event, id) {
       event.preventDefault();
       event.stopPropagation();

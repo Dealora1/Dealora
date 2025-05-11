@@ -13,7 +13,6 @@
     <div class="left-side">
       <a href="home.html" class="logo">DEALORA</a>
       <nav class="nav">
-        <!-- NEW IN Dropdown -->
         <div class="dropdown">
           <a href="#" onclick="toggleDropdown(event, 'newinDropdown')">NEW IN</a>
           <div class="dropdown-content" id="newinDropdown">
@@ -24,31 +23,6 @@
               <a href="#">This Week’s Picks</a>
               <a href="#">Limited Edition</a>
               <a href="#">Back in Stock</a>
-            </div>
-          </div>
-        </div>
-
-        <!-- SHOP Dropdown -->
-        <div class="dropdown">
-          <a href="#" onclick="toggleDropdown(event, 'shopDropdown')">SHOP</a>
-          <div class="dropdown-content" id="shopDropdown">
-            <div class="column">
-              <a href="Games.html"><h4>Games</h4></a> 
-              <a href="playstation.html">PlayStation</a>
-              <a href="xbox.html">Xbox</a>
-              <a href="Nintendo.html">Nintendo</a>
-            </div>
-            <div class="column">
-              <a href="catalog.html"><h4>CATALOG</h4></a>
-              <a href="men.html">Men</a>
-              <a href="women.html">Women</a>
-              <a href="kids.html">Kids</a>
-            </div>
-            <div class="column">
-              <h4>Electronics</h4>
-              <a href="#">Phones</a>
-              <a href="#">Laptops</a>
-              <a href="#">Accessories</a>
             </div>
           </div>
         </div>
@@ -89,8 +63,9 @@
         <button>12</button><button>14</button><button>16</button><button>18</button>
       </div>
 
-      <button class="add-to-bag">ADD TO BAG</button>
-      <button class="add-to-bag">Join to Unlock</button>
+      <button class="add-to-bag" id="addToBagBtn">ADD TO BAG</button>
+      <button class="add-to-bag" id="joinUnlockBtn">Join to Unlock</button>
+      <p id="queueInfo">🔥 Current queue size: 0</p>
     </div>
   </div>
 
@@ -99,15 +74,15 @@
     const params = new URLSearchParams(window.location.search);
     const image = params.get("image");
     const name = params.get("name");
-    const price = params.get("price");
+    const price = parseFloat(params.get("price"));
 
     if (image && name && price) {
       document.getElementById("product-image").src = "./image/" + decodeURIComponent(image);
       document.getElementById("product-name").textContent = decodeURIComponent(name);
-      document.getElementById("product-price").textContent = decodeURIComponent(price);
+      document.getElementById("product-price").textContent = price + " SAR";
     }
 
-    // تفعيل اختيار اللون فقط (بدون تغيير الصورة)
+    // ✅ تفعيل اختيار اللون
     document.querySelectorAll('.color-circle').forEach(circle => {
       circle.addEventListener('click', () => {
         document.querySelectorAll('.color-circle').forEach(c => c.classList.remove('selected'));
@@ -115,7 +90,7 @@
       });
     });
 
-    // تفعيل اختيار المقاس
+    // ✅ تفعيل اختيار المقاس
     document.querySelectorAll('.sizes button').forEach(button => {
       button.addEventListener('click', () => {
         document.querySelectorAll('.sizes button').forEach(b => b.classList.remove('selected'));
@@ -123,62 +98,66 @@
       });
     });
 
-    // Add to Cart Logic
-    document.querySelector(".add-to-bag").addEventListener("click", () => {
+    // ✅ زر ADD TO BAG (يتطلب اللون والمقاس)
+    document.getElementById("addToBagBtn").addEventListener("click", () => {
       const selectedColor = document.querySelector('.color-circle.selected');
       const selectedSize = document.querySelector('.sizes button.selected');
 
       if (!selectedColor || !selectedSize) {
-        alert("Please select both a color and a size.");
+        alert("⚠️ Please select both a color and a size.");
         return;
       }
 
-      // Create the product object
       const product = {
         name: decodeURIComponent(name),
-        price: parseFloat(decodeURIComponent(price)),
+        price: price,
         image: decodeURIComponent(image),
         color: selectedColor.title,
         size: selectedSize.textContent,
         quantity: 1
       };
 
-      // Retrieve existing cart items from localStorage
       const existingCart = JSON.parse(localStorage.getItem("cartItems")) || [];
-
-      // Add the product to the cart array
       existingCart.push(product);
-
-      // Save the updated cart back to localStorage
       localStorage.setItem("cartItems", JSON.stringify(existingCart));
-
       alert("✅ Product added to your bag!");
     });
 
-    // Dropdown toggle function for navigation menus
-    function toggleDropdown(event, id) {
-      event.preventDefault();
-      event.stopPropagation();
+    // ✅ زر JOIN TO UNLOCK (بدون اختيار اللون والمقاس)
+    document.getElementById("joinUnlockBtn").addEventListener("click", async () => {
+      const email = localStorage.getItem("username");
+      if (!email) {
+        alert("⚠️ Please sign in to join the discount queue.");
+        window.location.href = "signin.html";
+        return;
+      }
 
-      // Close all other dropdowns
-      document.querySelectorAll('.dropdown-content').forEach(el => {
-        if (el.id !== id) el.classList.remove("show");
-      });
-
-      // Open or close the clicked dropdown
-      const target = document.getElementById(id);
-      target.classList.toggle("show");
-    }
-
-    // Close dropdowns when clicking outside
-    window.addEventListener("click", function (e) {
-      if (!e.target.closest('.dropdown')) {
-        document.querySelectorAll('.dropdown-content').forEach(el => {
-          el.classList.remove("show");
+      try {
+        const res = await fetch('http://localhost:3000/api/unlock-queue', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, productId: name })
         });
+
+        const data = await res.json();
+        if (res.ok) {
+          if (data.discountActivated) {
+            alert("🎉 Discount Activated! " + data.queueLength + " users have joined.");
+            document.getElementById("product-price").textContent = (price * 0.5).toFixed(2) + " SAR";
+          } else {
+            alert(`✅ Joined the queue! ${data.queueLength} users have joined.`);
+            document.getElementById("queueInfo").textContent = `🔥 Current queue size: ${data.queueLength}`;
+          }
+        } else {
+          alert("❌ " + data.message);
+        }
+      } catch (err) {
+        alert("❌ Server error");
+        console.error(err);
       }
     });
   </script>
 
 </body>
 </html>
+

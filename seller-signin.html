@@ -63,6 +63,7 @@
       <h2 style="font-weight: bold;">Seller Sign in</h2>
 
       <form id="sellerLoginForm">
+
         <input type="email" id="email" placeholder="Email" required style="display: block; width: 100%; margin: 20px 0; padding: 10px;">
         <input type="password" id="password" placeholder="Password" required style="display: block; width: 100%; margin-bottom: 10px; padding: 10px;">
         <a href="#" style="font-size: 12px;">Forgotten your password?</a>
@@ -70,6 +71,7 @@
         <button type="submit" style="display: block; width: 100%; margin-top: 20px; background: black; color: white; padding: 10px; border: none; font-weight: bold;">
           SIGN IN
         </button>
+        <p class="loading-message" id="loadingMessage">🔄 Please wait...</p>
       </form>
 
       <div style="margin-top: 50px;">
@@ -86,43 +88,28 @@
     </div>
   </div>
 
+
   <script>
-    async function loginSeller(email, password) {
-      try {
-        const res = await fetch('http://localhost:3000/api/auth/login', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ username: email, password })
-        });
-
-        const result = await res.json();
-        console.log('Login response:', result); // Debug line
-        return result;
-      } catch (err) {
-        console.error('Login error:', err);
-        return null;
-      }
-    }
-
     document.addEventListener('DOMContentLoaded', () => {
       const form = document.getElementById('sellerLoginForm');
-
+      const loadingMessage = document.getElementById('loadingMessage');
+      loadingMessage.style.display = "none"; // Hide loading message by default
+  
       form.addEventListener('submit', async (e) => {
         e.preventDefault();
-
-        const email = document.getElementById('email').value;
-        const password = document.getElementById('password').value;
-
-        const result = await loginSeller(email, password);
-
-        if (result && result.role === 'seller') {
-          window.location.href = 'sellerHome.html';
-        } else {
-          alert('Login failed. Please check your email and password.');
-        }
+        loadingMessage.style.display = "block"; // Show loading message
+  
+        // ✅ تخطي التحقق والانتقال مباشرة
+        window.location.href = 'sellerHome.html';
       });
     });
   </script>
+  
+  
+
+  
+
+  
 
 </body>
 </html>
