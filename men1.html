@@ -1,7 +1,5 @@
 <!DOCTYPE html>
-
 <html lang="en">
-
 <head>
   <meta charset="UTF-8" />
   <title>Linen Cropped Utility Jacket - Dealora</title>
@@ -16,7 +14,6 @@
     <div class="left-side">
       <a href="home.html" class="logo">DEALORA</a>
       <nav class="nav">
-        <!-- NEW IN Dropdown -->
         <div class="dropdown">
           <a href="#" onclick="toggleDropdown(event, 'newinDropdown')">NEW IN</a>
           <div class="dropdown-content" id="newinDropdown">
@@ -24,14 +21,10 @@
               <h4>New In</h4>
               <a href="#">New Arrivals</a>
               <a href="#">Trending Now</a>
-              <a href="#">This Week’s Picks</a>
-              <a href="#">Limited Edition</a>
-              <a href="#">Back in Stock</a>
             </div>
           </div>
         </div>
 
-        <!-- SHOP Dropdown -->
         <div class="dropdown">
           <a href="#" onclick="toggleDropdown(event, 'shopDropdown')">SHOP</a>
           <div class="dropdown-content" id="shopDropdown">
@@ -41,29 +34,11 @@
               <a href="xbox.html">Xbox</a>
               <a href="Nintendo.html">Nintendo</a>
             </div>
-            <div class="column">
-              <a href="catalog.html"><h4>CATALOG</h4></a>
-              <a href="men.html">Men</a>
-              <a href="women.html">Women</a>
-              <a href="kids.html">Kids</a>
-            </div>
-            <div class="column">
-              <h4>Electronics</h4>
-              <a href="#">Phones</a>
-              <a href="#">Laptops</a>
-              <a href="#">Accessories</a>
-            </div>
           </div>
         </div>
-
       </nav>
     </div>
     <div class="right-side">
-      <div class="search-container">
-        <i class="fas fa-search"></i>
-        <input type="text" placeholder="Search">
-      </div>
-      <i class="fas fa-heart"></i>
       <a href="signin.html" title="Account">
         <i class="fas fa-user"></i>
       </a>
@@ -94,7 +69,8 @@
       </div>
 
       <button class="add-to-bag">ADD TO BAG</button>
-      <button class="add-to-bag">Join to Unlock</button>
+      <button class="add-to-bag" id="joinUnlockBtn">Join to Unlock</button>
+      <p id="queueInfo">🔥 Current queue size: 0</p>
     </div>
   </div>
 
@@ -127,7 +103,7 @@
       });
     });
 
-    // Add to Cart functionality
+    // ✅ تفعيل زر ADD TO BAG بدون تأثير
     document.querySelector(".add-to-bag").addEventListener("click", () => {
       const selectedColor = document.querySelector('.color-circle.selected');
       const selectedSize = document.querySelector('.sizes button.selected');
@@ -137,7 +113,6 @@
         return;
       }
 
-      // Create the product object
       const product = {
         name: decodeURIComponent(name),
         price: parseFloat(decodeURIComponent(price)),
@@ -147,43 +122,63 @@
         quantity: 1
       };
 
-      // Retrieve existing cart items from localStorage
       const existingCart = JSON.parse(localStorage.getItem("cartItems")) || [];
-
-      // Add the product to the cart array
       existingCart.push(product);
-
-      // Save the updated cart back to localStorage
       localStorage.setItem("cartItems", JSON.stringify(existingCart));
-
       alert("✅ Product added to your bag!");
     });
 
-    // Dropdown toggle function for navigation menus
-    function toggleDropdown(event, id) {
-      event.preventDefault();
-      event.stopPropagation();
+    // ✅ تفعيل زر Join to Unlock
+    document.getElementById("joinUnlockBtn").addEventListener("click", async () => {
+      const email = localStorage.getItem("userEmail");
+      const productId = document.getElementById("product-name").textContent.trim();
 
-      // Close all other dropdowns
-      document.querySelectorAll('.dropdown-content').forEach(el => {
-        if (el.id !== id) el.classList.remove("show");
-      });
+      if (!email) {
+        alert("⚠️ Please sign in to join the discount queue.");
+        window.location.href = "signin.html";
+        return;
+      }
 
-      // Open or close the clicked dropdown
-      const target = document.getElementById(id);
-      target.classList.toggle("show");
-    }
-
-    // Close dropdowns when clicking outside
-    window.addEventListener("click", function (e) {
-      if (!e.target.closest('.dropdown')) {
-        document.querySelectorAll('.dropdown-content').forEach(el => {
-          el.classList.remove("show");
+      try {
+        const res = await fetch('http://localhost:3000/api/unlock-queue', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, productId })
         });
+
+        const data = await res.json();
+        if (res.ok) {
+          if (data.discountActivated) {
+            alert("🎉 Discount Activated! " + data.queueLength + " users have joined.");
+            document.getElementById("product-price").textContent = (parseFloat(price) * 0.5).toFixed(2) + " SAR";
+          } else {
+            alert(`✅ Joined the queue! ${data.queueLength} users have joined.`);
+            document.getElementById("queueInfo").textContent = `🔥 Current queue size: ${data.queueLength}`;
+          }
+        } else {
+          alert("❌ " + data.message);
+        }
+      } catch (err) {
+        alert("❌ Server error");
+        console.error(err);
       }
     });
+
+    document.addEventListener("DOMContentLoaded", () => {
+      loadQueueSize();
+    });
+
+    async function loadQueueSize() {
+      const productId = document.getElementById("product-name").textContent.trim();
+      try {
+        const res = await fetch(`http://localhost:3000/api/unlock-queue/queue-size?productId=${encodeURIComponent(productId)}`);
+        const data = await res.json();
+        document.getElementById("queueInfo").textContent = `🔥 Current queue size: ${data.queueLength || 0}`;
+      } catch (err) {
+        console.error("❌ Error loading queue size:", err);
+      }
+    }
   </script>
 
 </body>
-
 </html>
