@@ -92,6 +92,9 @@ The platform includes seller/buyer login, product catalog browsing, cart and che
 #  Future Work
 
 - **Buyer Notifications** – Notify users when the queue is full or when deals are activated.
+- **User Offer System** – Allow buyers to propose their own group offers, inviting others to join and unlock it
+- **Seller Product Management** – Enable sellers to remove or update products through their dashboard
+- **Offer Visibility on Product Page** – Display queue target, and discount info directly on the product detail page
 
 ---
 
