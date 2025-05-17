@@ -110,6 +110,5 @@ The platform includes seller/buyer login, product catalog browsing, cart and che
 
 
 #  App Demo
-![Click to watch](https://github.com/Dealora1/Dealora/blob/main/demo-thumbnail.png)  
-🔗 [Click here to watch the demo](https://github.com/Dealora1/Dealora/blob/main/App-Demo.Mp4.mp4)
 
+[![Watch the App Demo](https://github.com/user-attachments/assets/aa356ca4-2740-4d1c-bb91-8cf21627df9e)](https://github.com/Dealora1/Dealora/blob/main/App-Demo.Mp4.mp4)
