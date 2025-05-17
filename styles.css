@@ -1199,3 +1199,66 @@ body {
   color: #555;
   margin-top: 10px;
 }
+/* ✅ Add Product Form Styling (Seller Page) */
+.add-product-container {
+  max-width: 450px;
+  margin: 150px auto;
+  padding: 40px;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.add-product-container h2 {
+  font-size: 28px;
+  text-align: center;
+  margin-bottom: 20px;
+  color: black;
+}
+
+.add-product-container label {
+  display: block;
+  margin: 10px 0 5px;
+  font-weight: bold;
+  color: black;
+}
+
+.add-product-container input,
+.add-product-container select {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 15px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 14px;
+  outline: none;
+}
+
+.add-product-container input:focus,
+.add-product-container select:focus {
+  border-color: #333;
+}
+
+.add-product-container .btn {
+  width: 100%;
+  padding: 14px;
+  background-color: black;
+  color: white;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-top: 20px;
+}
+
+.add-product-container .btn:hover {
+  background-color: #333;
+}
+
+/* ✅ Responsive Design */
+@media (max-width: 768px) {
+  .add-product-container {
+    padding: 20px;
+    margin-top: 100px;
+  }
+}
