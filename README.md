@@ -95,7 +95,8 @@ The platform includes seller/buyer login, product catalog browsing, cart and che
 - **User Offer System** – Allow buyers to propose their own group offers, inviting others to join and unlock it
 - **Seller Product Management** – Enable sellers to remove or update products through their dashboard
 - **Offer Visibility on Product Page** – Display queue target, and discount info directly on the product detail page
-
+- **Account Editing** – Let users update their profile information (e.g., name, password)
+- **Account Deletion** – Allow users to permanently delete their accounts from the platform
 ---
 
 #  Resources
