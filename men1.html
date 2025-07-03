@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Linen Cropped Utility Jacket - Dealora</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+
+<body class="catalog-page">
+
+  <!-- ✅ الهيدر الموحد -->
+  <header class="main-header">
+    <div class="left-side">
+      <a href="home.html" class="logo">DEALORA</a>
+      <nav class="nav">
+        <div class="dropdown">
+          <a href="#" onclick="toggleDropdown(event, 'newinDropdown')">NEW IN</a>
+          <div class="dropdown-content" id="newinDropdown">
+            <div class="column">
+              <h4>New In</h4>
+              <a href="#">New Arrivals</a>
+              <a href="#">Trending Now</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="dropdown">
+          <a href="#" onclick="toggleDropdown(event, 'shopDropdown')">SHOP</a>
+          <div class="dropdown-content" id="shopDropdown">
+            <div class="column">
+              <a href="Games.html"> <h4>Games</h4></a> 
+              <a href="playstation.html">PlayStation</a>
+              <a href="xbox.html">Xbox</a>
+              <a href="Nintendo.html">Nintendo</a>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </div>
+    <div class="right-side">
+      <a href="signin.html" title="Account">
+        <i class="fas fa-user"></i>
+      </a>
+      <a href="cart.html" title="Cart">
+        <i class="fas fa-bag-shopping"></i>
+      </a>
+    </div>
+  </header>
+
+  <!-- ✅ تفاصيل المنتج -->
+  <div class="product-detail">
+    <img id="product-image" src="" alt="Product Image">
+    <div class="product-info">
+      <p>LISA ARMSTRONG EDIT</p>
+      <h2 id="product-name">Product Name</h2>
+      <p class="price" id="product-price">000sr</p>
+
+      <div class="colors">
+        <p>Colour:</p>
+        <span class="color-circle color-brown" title="Brown"></span>
+        <span class="color-circle color-gray" title="Gray"></span>
+      </div>
+
+      <div class="sizes">
+        <p>Size:</p>
+        <button>6</button><button>8</button><button>10</button>
+        <button>12</button><button>14</button><button>16</button><button>18</button>
+      </div>
+
+      <button class="add-to-bag">ADD TO BAG</button>
+      <button class="add-to-bag" id="joinUnlockBtn">Join to Unlock</button>
+      <p id="queueInfo">🔥 Current queue size: 0</p>
+    </div>
+  </div>
+
+  <!-- ✅ JavaScript -->
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const image = params.get("image");
+    const name = params.get("name");
+    const price = params.get("price");
+
+    if (image && name && price) {
+      document.getElementById("product-image").src = "./image/" + decodeURIComponent(image);
+      document.getElementById("product-name").textContent = decodeURIComponent(name);
+      document.getElementById("product-price").textContent = decodeURIComponent(price);
+    }
+
+    // Handle color selection
+    document.querySelectorAll('.color-circle').forEach(circle => {
+      circle.addEventListener('click', () => {
+        document.querySelectorAll('.color-circle').forEach(c => c.classList.remove('selected'));
+        circle.classList.add('selected');
+      });
+    });
+
+    // Handle size selection
+    document.querySelectorAll('.sizes button').forEach(button => {
+      button.addEventListener('click', () => {
+        document.querySelectorAll('.sizes button').forEach(b => b.classList.remove('selected'));
+        button.classList.add('selected');
+      });
+    });
+
+    // ✅ تفعيل زر ADD TO BAG بدون تأثير
+    document.querySelector(".add-to-bag").addEventListener("click", () => {
+      const selectedColor = document.querySelector('.color-circle.selected');
+      const selectedSize = document.querySelector('.sizes button.selected');
+
+      if (!selectedColor || !selectedSize) {
+        alert("Please select both a color and a size.");
+        return;
+      }
+
+      const product = {
+        name: decodeURIComponent(name),
+        price: parseFloat(decodeURIComponent(price)),
+        image: decodeURIComponent(image),
+        color: selectedColor.title,
+        size: selectedSize.textContent,
+        quantity: 1
+      };
+
+      const existingCart = JSON.parse(localStorage.getItem("cartItems")) || [];
+      existingCart.push(product);
+      localStorage.setItem("cartItems", JSON.stringify(existingCart));
+      alert("✅ Product added to your bag!");
+    });
+
+    // ✅ تفعيل زر Join to Unlock
+    document.getElementById("joinUnlockBtn").addEventListener("click", async () => {
+      const email = localStorage.getItem("userEmail");
+      const productId = document.getElementById("product-name").textContent.trim();
+
+      if (!email) {
+        alert("⚠️ Please sign in to join the discount queue.");
+        window.location.href = "signin.html";
+        return;
+      }
+
+      try {
+        const res = await fetch('http://localhost:3000/api/unlock-queue', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, productId })
+        });
+
+        const data = await res.json();
+        if (res.ok) {
+          if (data.discountActivated) {
+            alert("🎉 Discount Activated! " + data.queueLength + " users have joined.");
+            document.getElementById("product-price").textContent = (parseFloat(price) * 0.5).toFixed(2) + " SAR";
+          } else {
+            alert(`✅ Joined the queue! ${data.queueLength} users have joined.`);
+            document.getElementById("queueInfo").textContent = `🔥 Current queue size: ${data.queueLength}`;
+          }
+        } else {
+          alert("❌ " + data.message);
+        }
+      } catch (err) {
+        alert("❌ Server error");
+        console.error(err);
+      }
+    });
+
+    document.addEventListener("DOMContentLoaded", () => {
+      loadQueueSize();
+    });
+
+    async function loadQueueSize() {
+      const productId = document.getElementById("product-name").textContent.trim();
+      try {
+        const res = await fetch(`http://localhost:3000/api/unlock-queue/queue-size?productId=${encodeURIComponent(productId)}`);
+        const data = await res.json();
+        document.getElementById("queueInfo").textContent = `🔥 Current queue size: ${data.queueLength || 0}`;
+      } catch (err) {
+        console.error("❌ Error loading queue size:", err);
+      }
+    }
+  </script>
+
+</body>
+</html>

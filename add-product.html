@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Add Product - Dealora</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+
+<!-- ✅ Header (consistent with other pages) -->
+<header>
+  <div class="left-side">
+    <a href="home.html" class="logo">DEALORA</a>
+    <nav class="nav">
+      <a href="home.html">Home</a>
+      <a href="shop.html">Shop</a>
+      <a href="signin.html">Sign In</a>
+      <a href="seller-signin.html">Seller</a>
+    </nav>
+  </div>
+
+  <div class="right-side">
+    <div class="search-container">
+      <i class="fas fa-search"></i>
+      <input type="text" placeholder="Search">
+    </div>
+    <i class="fas fa-heart" title="Favorites"></i>
+    <i class="fas fa-user" title="Account"></i>
+  </div>
+</header>
+
+<!-- ✅ Add Product Form -->
+<div class="add-product-container" style="max-width: 400px; margin: 100px auto; background: #f9f9f9; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
+  <h2 style="text-align: center;">Add Product</h2>
+  <form id="addProductForm">
+    <label>Product Name:</label>
+    <input type="text" id="productName" required style="width: 100%; padding: 10px; margin-bottom: 15px;"><br>
+
+    <label>Product ID (unique):</label>
+    <input type="text" id="productId" required style="width: 100%; padding: 10px; margin-bottom: 15px;"><br>
+
+    <label>Required Users to Unlock Discount:</label>
+    <input type="number" id="requiredCount" min="1" required style="width: 100%; padding: 10px; margin-bottom: 15px;"><br>
+
+    <label>Discount Percentage (e.g. 0.2 for 20%):</label>
+    <input type="number" id="discountPercentage" step="0.01" min="0" max="1" required style="width: 100%; padding: 10px; margin-bottom: 15px;"><br>
+
+    <button type="submit" class="btn" style="width: 100%; background: black; color: white; padding: 12px; font-weight: bold;">Add Product</button>
+  </form>
+</div>
+
+<!-- ✅ JavaScript to Submit Form -->
+<script>
+  document.getElementById('addProductForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const productName = document.getElementById('productName').value.trim();
+    const productId = document.getElementById('productId').value.trim();
+    const requiredCount = parseInt(document.getElementById('requiredCount').value);
+    const discountPercentage = parseFloat(document.getElementById('discountPercentage').value);
+
+    // ✅ التحقق من أن نسبة الخصم بين 0 و 1
+    if (discountPercentage <= 0 || discountPercentage >= 1) {
+      alert("⚠️ Please enter a valid discount percentage (between 0 and 1).");
+      return;
+    }
+
+    try {
+      const res = await fetch('http://localhost:3000/api/deals', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ productId, productName, requiredCount, discountPercentage })
+      });
+
+      const data = await res.json();
+      if (res.ok) {
+        alert("✅ Product added successfully!");
+        document.getElementById('addProductForm').reset();
+      } else {
+        alert("❌ " + data.message);
+      }
+    } catch (err) {
+      alert("❌ Server error");
+      console.error(err);
+    }
+  });
+</script>
+
+</body>
+</html>
+
+
+

@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Your Cart | DEALORA</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f9f9f9;
+    }
+
+    .cart-container {
+      max-width: 1000px;
+      margin: 140px auto 40px auto;
+      padding: 20px;
+      background: white;
+      border-radius: 10px;
+    }
+
+    .cart-container h1 {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .cart-items {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .cart-item {
+      display: flex;
+      align-items: center;
+      padding: 15px;
+      border: 1px solid #ddd;
+      background-color: #fafafa;
+      border-radius: 8px;
+    }
+
+    .cart-item img {
+      width: 100px;
+      height: 100px;
+      object-fit: cover;
+      margin-right: 20px;
+    }
+
+    .item-details {
+      flex-grow: 1;
+    }
+
+    .remove-btn {
+      background-color: #e74c3c;
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .cart-summary {
+      margin-top: 30px;
+      text-align: right;
+    }
+
+    .checkout-btn {
+      background-color: black;
+      color: rgb(255, 244, 244);
+      padding: 12px 20px;
+      border: none;
+      font-size: 16px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .empty-msg {
+      text-align: center;
+      margin-top: 40px;
+      font-size: 18px;
+      color: #888;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ✅ HEADER الموحد -->
+  <header>
+    <div class="left-side">
+      <a href="home.html" class="logo">DEALORA</a>
+      <nav class="nav">
+        <!-- Navigation items -->
+      </nav>
+    </div>
+    <div class="right-side">
+      <div class="search-container">
+        <i class="fas fa-search"></i>
+        <input type="text" placeholder="Search" />
+      </div>
+      <i class="fas fa-heart" title="Favorites"></i>
+      <a href="signin.html" title="Account"><i class="fas fa-user"></i></a>
+      <a href="cart.html" title="Cart"><i class="fas fa-bag-shopping"></i></a>
+    </div>
+  </header>
+
+  <!-- ✅ Cart Section -->
+  <div class="cart-container">
+    <h1>Your Shopping Cart</h1>
+    <div class="cart-items" id="cart-items"></div>
+    <div class="cart-summary" id="cart-summary" style="display: none;">
+      <h2>Total: <span id="cart-total">0.00 SAR</span></h2>
+      <button class="checkout-btn" onclick="goToCheckout()">Proceed to Checkout</button>
+    </div>
+    <p id="empty-msg" class="empty-msg">Your cart is empty.</p>
+  </div>
+<div>This is a test for cart-page branch</div>
+
+  <!-- ✅ Script -->
+  <script>
+    const cartItems = JSON.parse(localStorage.getItem("cartItems")) || [];
+    const container = document.getElementById("cart-items");
+    const totalEl = document.getElementById("cart-total");
+    const summary = document.getElementById("cart-summary");
+    const emptyMsg = document.getElementById("empty-msg");
+
+    function updateCart() {
+      container.innerHTML = "";
+      let total = 0;
+
+      if (cartItems.length === 0) {
+        summary.style.display = "none";
+        emptyMsg.style.display = "block";
+        return;
+      }
+
+      cartItems.forEach((item, index) => {
+        const div = document.createElement("div");
+        div.className = "cart-item";
+        div.innerHTML = `
+          <img src="${item.image}" alt="${item.name}">
+          <div class="item-details">
+            <h3>${item.name}</h3>
+            <p>Color: ${item.color || '-'}</p>
+            <p>Size: ${item.size || '-'}</p>
+            <p>Quantity: ${item.quantity}</p>
+            <p class="price">Price: ${item.price} SAR</p>
+          </div>
+          <button class="remove-btn" onclick="removeItem(${index})">Remove</button>
+        `;
+        total += parseFloat(item.price) * item.quantity; // Ensure price is treated as a number
+        container.appendChild(div);
+      });
+
+      totalEl.textContent = total.toFixed(2) + " SAR";  // Ensure total is shown as a proper number
+      summary.style.display = "block";
+      emptyMsg.style.display = "none";
+    }
+
+    function removeItem(index) {
+      cartItems.splice(index, 1);
+      localStorage.setItem("cartItems", JSON.stringify(cartItems));
+      updateCart();
+    }
+
+    function goToCheckout() {
+      window.location.href = "checkout.html";
+    }
+
+    updateCart();
+  </script>
+</body> 
+</html>

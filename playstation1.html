@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Linen Cropped Utility Jacket - Dealora</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+
+<body class="catalog-page">
+
+  <!-- ✅ الهيدر الموحد -->
+  <header class="main-header">
+    <div class="left-side">
+      <a href="home.html" class="logo">DEALORA</a>
+      <nav class="nav">
+        <div class="dropdown">
+          <a href="#" onclick="toggleDropdown(event, 'newinDropdown')">NEW IN</a>
+          <div class="dropdown-content" id="newinDropdown">
+            <div class="column">
+              <h4>New In</h4>
+              <a href="#">New Arrivals</a>
+              <a href="#">Trending Now</a>
+              <a href="#">This Week’s Picks</a>
+              <a href="#">Limited Edition</a>
+              <a href="#">Back in Stock</a>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </div>
+    <div class="right-side">
+      <div class="search-container">
+        <i class="fas fa-search"></i>
+        <input type="text" placeholder="Search">
+      </div>
+      <i class="fas fa-heart"></i>
+      <a href="signin.html" title="Account">
+        <i class="fas fa-user"></i>
+      </a>
+      <a href="cart.html" title="Cart">
+        <i class="fas fa-bag-shopping"></i>
+      </a>
+    </div>
+  </header>
+
+  <!-- ✅ تفاصيل المنتج -->
+  <div class="product-detail">
+    <img id="product-image" src="" alt="Product Image">
+    <div class="product-info">
+      <p>PLAYSTATION EDITION</p>
+      <h2 id="product-name">Product Name</h2>
+      <p class="price" id="product-price">000sr</p>
+
+      <div class="colors">
+        <p>Color:</p>
+        <span class="color-circle color-gray" title="Gray"></span>
+        <span class="color-circle" style="background-color: white;" title="White"></span>
+        <span class="color-circle" style="background-color: black;" title="Black"></span>
+      </div>
+
+      <div class="option-group">
+        <p>Edition:</p>
+        <div class="option-buttons" id="edition-options">
+          <button>Standard</button>
+          <button>Digital</button>
+          <button>Slim</button>
+          <button>Pro</button>
+        </div>
+      </div>
+
+      <div class="option-group">
+        <p>Extras:</p>
+        <div class="option-buttons" id="extras-options">
+          <button>Extra Controller</button>
+          <button>Charging Dock</button>
+          <button>Pulse 3D Headset</button>
+          <button>Camera</button>
+        </div>
+      </div>
+
+      <button class="add-to-bag" id="addToBagBtn">ADD TO BAG</button>
+      <button class="add-to-bag" id="joinUnlockBtn">Join to Unlock</button>
+      <p id="queueInfo">🔥 Current queue size: 0</p>
+    </div>
+  </div>
+
+  <!-- ✅ JavaScript -->
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const image = params.get("image");
+    const name = params.get("name");
+    const price = parseFloat(params.get("price"));
+
+    if (image && name && price) {
+      document.getElementById("product-image").src = "./image/" + decodeURIComponent(image);
+      document.getElementById("product-name").textContent = decodeURIComponent(name);
+      document.getElementById("product-price").textContent = price + " SAR";
+    }
+
+    // ✅ تفعيل اختيار اللون
+    document.querySelectorAll('.color-circle').forEach(circle => {
+      circle.addEventListener('click', () => {
+        document.querySelectorAll('.color-circle').forEach(c => c.classList.remove('selected'));
+        circle.classList.add('selected');
+      });
+    });
+
+    // ✅ تفعيل اختيار النسخة والإضافات
+    function activateSelection(groupId) {
+      document.querySelectorAll(`#${groupId} button`).forEach(button => {
+        button.addEventListener('click', () => {
+          document.querySelectorAll(`#${groupId} button`).forEach(b => b.classList.remove('selected'));
+          button.classList.add('selected');
+        });
+      });
+    }
+
+    activateSelection('edition-options');
+    activateSelection('extras-options');
+
+    // ✅ زر ADD TO BAG (يتطلب الخيارات)
+    document.getElementById("addToBagBtn").addEventListener("click", () => {
+      const selectedColor = document.querySelector('.color-circle.selected');
+      const selectedEdition = document.querySelector('#edition-options button.selected');
+      const selectedExtras = document.querySelector('#extras-options button.selected');
+
+      if (!selectedColor || !selectedEdition) {
+        alert("⚠️ Please select both a color and an edition.");
+        return;
+      }
+
+      const product = {
+        name: decodeURIComponent(name),
+        price: price,
+        image: decodeURIComponent(image),
+        color: selectedColor.title,
+        edition: selectedEdition.textContent,
+        extras: selectedExtras ? selectedExtras.textContent : "None",
+        quantity: 1
+      };
+
+      const existingCart = JSON.parse(localStorage.getItem("cartItems")) || [];
+      existingCart.push(product);
+      localStorage.setItem("cartItems", JSON.stringify(existingCart));
+      alert("✅ Product added to your bag!");
+    });
+
+    // ✅ زر JOIN TO UNLOCK (بدون اختيار الخيارات)
+    document.getElementById("joinUnlockBtn").addEventListener("click", async () => {
+      const email = localStorage.getItem("username");
+      if (!email) {
+        alert("⚠️ Please sign in to join the discount queue.");
+        window.location.href = "signin.html";
+        return;
+      }
+
+      try {
+        const res = await fetch('http://localhost:3000/api/unlock-queue', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, productId: name })
+        });
+
+        const data = await res.json();
+        if (res.ok) {
+          if (data.discountActivated) {
+            alert("🎉 Discount Activated! " + data.queueLength + " users have joined.");
+            document.getElementById("product-price").textContent = (price * 0.5).toFixed(2) + " SAR";
+          } else {
+            alert(`✅ Joined the queue! ${data.queueLength} users have joined.`);
+            document.getElementById("queueInfo").textContent = `🔥 Current queue size: ${data.queueLength}`;
+          }
+        } else {
+          alert("❌ " + data.message);
+        }
+      } catch (err) {
+        alert("❌ Server error");
+        console.error(err);
+      }
+    });
+  </script>
+
+</body>
+</html>

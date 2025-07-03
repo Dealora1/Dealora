@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Linen Cropped Utility Jacket1 - Dealora</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body class="catalog-page">
+
+  <!-- ✅ الهيدر الموحد (التوب بار نفسه مثل home) -->
+  <header>
+    <div class="left-side">
+      <a href="home.html" class="logo">DEALORA</a>
+      <nav class="nav">
+        <!-- Navigation Links (Same as Original) -->
+      </nav>
+    </div>
+
+    <div class="right-side">
+      <div class="search-container">
+        <i class="fas fa-search"></i>
+        <input type="text" placeholder="Search">
+      </div>
+      <i class="fas fa-heart" title="Favorites"></i>
+      <a href="signin.html" title="Account">
+        <i class="fas fa-user"></i>
+      </a>
+      <a href="cart.html" title="Cart">
+        <i class="fas fa-bag-shopping"></i>
+      </a>
+    </div>
+  </header>
+
+  <!-- ✅ تفاصيل المنتج -->
+  <div class="product-detail">
+    <img id="product-image" src="" alt="Product Image">
+    <div class="product-info">
+      <p>NINTENDO COLLECTION</p>
+      <h2 id="product-name">Product Name</h2>
+      <p class="price" id="product-price">000sr</p>
+
+      <div class="colors">
+        <p>Color:</p>
+        <span class="color-circle" style="background-color: red;" title="Red"></span>
+        <span class="color-circle" style="background-color: blue;" title="Blue"></span>
+        <span class="color-circle" style="background-color: white;" title="White"></span>
+        <span class="color-circle" style="background-color: black;" title="Black"></span>
+      </div>
+
+      <div class="option-group">
+        <p>Model:</p>
+        <div class="option-buttons" id="storage-options">
+          <button>Switch OLED</button>
+          <button>Switch Standard</button>
+          <button>Switch Lite</button>
+        </div>
+      </div>
+
+      <div class="option-group">
+        <p>Accessories:</p>
+        <div class="option-buttons" id="ram-options">
+          <button>Joy-Con</button>
+          <button>Pro Controller</button>
+          <button>Carrying Case</button>
+          <button>Dock Set</button>
+        </div>
+      </div>
+
+      <button class="add-to-bag" id="addToCartBtn">ADD TO BAG</button>
+      <button class="add-to-bag" id="joinUnlockBtn">Join to Unlock</button>
+      <p id="queueInfo">🔥 Current queue size: 0</p>
+    </div>
+  </div>
+
+  <!-- ✅ JavaScript -->
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const image = params.get("image");
+    const name = params.get("name");
+    const price = params.get("price");
+
+    if (image && name && price) {
+      document.getElementById("product-image").src = "./image/" + decodeURIComponent(image);
+      document.getElementById("product-name").textContent = decodeURIComponent(name);
+      document.getElementById("product-price").textContent = decodeURIComponent(price);
+    }
+
+    // ✅ تفعيل اختيار اللون
+    document.querySelectorAll('.color-circle').forEach(circle => {
+      circle.addEventListener('click', () => {
+        document.querySelectorAll('.color-circle').forEach(c => c.classList.remove('selected'));
+        circle.classList.add('selected');
+      });
+    });
+
+    // ✅ تفعيل اختيار الموديل والاكسسوارات
+    function activateSelection(groupId) {
+      document.querySelectorAll(`#${groupId} button`).forEach(button => {
+        button.addEventListener('click', () => {
+          document.querySelectorAll(`#${groupId} button`).forEach(b => b.classList.remove('selected'));
+          button.classList.add('selected');
+        });
+      });
+    }
+
+    activateSelection('storage-options');
+    activateSelection('ram-options');
+
+    // ✅ Add to Bag Functionality
+    document.getElementById("addToCartBtn").addEventListener("click", () => {
+      const selectedColor = document.querySelector('.color-circle.selected');
+      const selectedModel = document.querySelector('#storage-options button.selected');
+      const selectedAccessory = document.querySelector('#ram-options button.selected');
+
+      if (!selectedColor || !selectedModel) {
+        alert("Please select both a color and a model.");
+        return;
+      }
+
+      const product = {
+        name: decodeURIComponent(name),
+        price: decodeURIComponent(price),
+        image: decodeURIComponent(image),
+        color: selectedColor.title,
+        model: selectedModel.textContent,
+        accessory: selectedAccessory ? selectedAccessory.textContent : "None",
+        quantity: 1
+      };
+
+      const existingCart = JSON.parse(localStorage.getItem("cartItems")) || [];
+      existingCart.push(product);
+      localStorage.setItem("cartItems", JSON.stringify(existingCart));
+
+      alert("✅ Product added to your bag!");
+    });
+
+    // ✅ Initialize Join to Unlock (Same as linen-jacket)
+    document.addEventListener("DOMContentLoaded", initializeJoinToUnlock);
+
+    function initializeJoinToUnlock() {
+      loadQueueSize();
+      document.getElementById("joinUnlockBtn").addEventListener("click", async () => {
+        const email = localStorage.getItem("username");
+        const productId = document.getElementById("product-name").textContent.trim();
+
+        if (!email) {
+          alert("⚠️ Please sign in to join the discount queue.");
+          window.location.href = "signin.html";
+          return;
+        }
+
+        try {
+          const res = await fetch('http://localhost:3000/api/unlock-queue', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, productId })
+          });
+
+          const data = await res.json();
+          if (res.ok) {
+            alert(data.discountActivated ? "🎉 Discount Activated!" : `✅ Joined the queue! ${data.queueLength} users have joined.`);
+            document.getElementById("queueInfo").textContent = `🔥 Current queue size: ${data.queueLength}`;
+          } else {
+            alert("❌ " + data.message);
+          }
+        } catch (err) {
+          alert("❌ Server error");
+          console.error(err);
+        }
+      });
+    }
+
+    // ✅ Function to load the current queue size
+    async function loadQueueSize() {
+      const productId = document.getElementById("product-name").textContent.trim();
+      try {
+        const res = await fetch(`http://localhost:3000/api/unlock-queue/queue-size?productId=${encodeURIComponent(productId)}`);
+        const data = await res.json();
+        document.getElementById("queueInfo").textContent = `🔥 Current queue size: ${data.queueLength || 0}`;
+      } catch (err) {
+        console.error("❌ Error loading queue size:", err);
+      }
+    }
+  </script>
+
+</body>
+</html>
+
+
