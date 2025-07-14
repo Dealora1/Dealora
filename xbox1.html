@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>XBOX SERIES EDITION - Dealora</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    .selected {
+      border: 2px solid #333;
+    }
+    .product-detail {
+      display: flex;
+      gap: 50px;
+      margin: 50px;
+      justify-content: center;
+      align-items: flex-start;
+    }
+    .product-detail img {
+      max-width: 400px;
+      height: auto;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+    }
+    .product-info {
+      max-width: 500px;
+    }
+    .product-info h2 {
+      font-size: 28px;
+      margin-top: 0;
+    }
+    .price {
+      font-weight: bold;
+      font-size: 22px;
+      margin: 10px 0;
+    }
+    .color-circle {
+      width: 25px;
+      height: 25px;
+      display: inline-block;
+      border-radius: 50%;
+      cursor: pointer;
+      margin-right: 8px;
+      border: 1px solid #ccc;
+    }
+    .add-to-bag {
+      background-color: black;
+      color: white;
+      font-weight: bold;
+      padding: 15px;
+      border: none;
+      cursor: pointer;
+      width: 100%;
+      font-size: 16px;
+      margin: 10px 0;
+    }
+    .add-to-bag:hover {
+      background-color: #333;
+    }
+    #joinUnlockBtn {
+      background-color: #28a745;
+      margin-top: 10px;
+    }
+    #joinUnlockBtn:hover {
+      background-color: #218838;
+    }
+    #queueInfo {
+      margin-top: 10px;
+      font-size: 16px;
+      color: #d9534f;
+    }
+  </style>
+</head>
+<body class="catalog-page">
+
+  <!-- ✅ Header -->
+  <header class="main-header">
+    <div class="left-side">
+      <a href="home.html" class="logo">DEALORA</a>
+      <nav class="nav">
+        <div class="dropdown">
+          <a href="#" onclick="toggleDropdown(event, 'newinDropdown')">NEW IN</a>
+          <div class="dropdown-content" id="newinDropdown">
+            <div class="column">
+              <h4>New In</h4>
+              <a href="#">New Arrivals</a>
+              <a href="#">Trending Now</a>
+              <a href="#">This Week’s Picks</a>
+              <a href="#">Limited Edition</a>
+              <a href="#">Back in Stock</a>
+            </div>
+          </div>
+        </div>
+        <div class="dropdown">
+          <a href="#" onclick="toggleDropdown(event, 'shopDropdown')">SHOP</a>
+          <div class="dropdown-content" id="shopDropdown">
+            <div class="column">
+              <a href="Games.html"><h4>Games</h4></a> 
+              <a href="playstation.html">PlayStation</a>
+              <a href="xbox.html">Xbox</a>
+              <a href="Nintendo.html">Nintendo</a>
+            </div>
+            <div class="column">
+              <h4>Electronics</h4>
+              <a href="#">Phones</a>
+              <a href="#">Laptops</a>
+              <a href="#">Accessories</a>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </div>
+    <div class="right-side">
+      <div class="search-container">
+        <i class="fas fa-search"></i>
+        <input type="text" placeholder="Search">
+      </div>
+      <i class="fas fa-heart"></i>
+      <a href="signin.html" title="Account">
+        <i class="fas fa-user"></i>
+      </a>
+      <a href="cart.html" title="Cart">
+        <i class="fas fa-bag-shopping"></i>
+      </a>
+    </div>
+  </header>
+
+  <!-- ✅ Product Detail Section -->
+  <div class="product-detail">
+    <img id="product-image" src="" alt="Product Image">
+    <div class="product-info">
+      <h2 id="product-name">Product Name</h2>
+      <p class="price" id="product-price">0 SAR</p>
+
+      <div class="colors">
+        <p>Color:</p>
+        <span class="color-circle" style="background-color: black;" title="Black"></span>
+        <span class="color-circle" style="background-color: white;" title="White"></span>
+        <span class="color-circle" style="background-color: green;" title="Green"></span>
+      </div>
+
+      <button class="add-to-bag" id="addToBagBtn">ADD TO BAG</button>
+      <button class="add-to-bag" id="joinUnlockBtn">Join to Unlock</button>
+      <p id="queueInfo">🔥 Current queue size: 0</p>
+    </div>
+  </div>
+
+  <script>
+    function toggleDropdown(event, id) {
+      event.preventDefault();
+      event.stopPropagation();
+      document.querySelectorAll('.dropdown-content').forEach(el => {
+        if (el.id !== id) el.classList.remove("show");
+      });
+      const target = document.getElementById(id);
+      target.classList.toggle("show");
+    }
+    window.addEventListener("click", function (e) {
+      if (!e.target.closest('.dropdown')) {
+        document.querySelectorAll('.dropdown-content').forEach(el => {
+          el.classList.remove("show");
+        });
+      }
+    });
+  </script>
+
+  <script>
+document.addEventListener("DOMContentLoaded", async () => {
+  const params = new URLSearchParams(window.location.search);
+  const productId = params.get("id");
+
+  if (!productId) {
+    alert("⚠️ Please open the page with product details.");
+    window.location.href = "xbox.html";
+    return;
+  }
+
+  let originalPrice = 0;
+  let deal = null;
+  let discountActivated = false;
+
+  try {
+    const res = await fetch(`http://localhost:3000/api/products/${productId}`);
+    const product = await res.json();
+
+    if (!res.ok || !product) {
+      alert("❌ Product not found.");
+      window.location.href = "xbox.html";
+      return;
+    }
+
+    originalPrice = product.price;
+    document.getElementById("product-name").textContent = product.name;
+    document.getElementById("product-price").textContent = `${originalPrice.toFixed(2)} SAR`;
+    document.getElementById("product-image").src = `./image/${product.image}`;
+  } catch (err) {
+    console.error(err);
+    alert("❌ Error loading product data.");
+    window.location.href = "xbox.html";
+    return;
+  }
+
+  document.querySelectorAll('.color-circle').forEach(circle => {
+    circle.addEventListener('click', () => {
+      document.querySelectorAll('.color-circle').forEach(c => c.classList.remove('selected'));
+      circle.classList.add('selected');
+    });
+  });
+
+  document.getElementById("addToBagBtn").addEventListener("click", () => {
+    const selectedColor = document.querySelector('.color-circle.selected');
+    if (!selectedColor) {
+      alert("⚠️ Please select a color.");
+      return;
+    }
+
+    let finalPrice = originalPrice;
+    if (deal && discountActivated) {
+      finalPrice = originalPrice * (1 - deal.discountPercentage);
+    }
+
+    const productObj = {
+      name: document.getElementById("product-name").textContent,
+      price: `${finalPrice.toFixed(2)} SAR`,
+      image: document.getElementById("product-image").src,
+      color: selectedColor.title,
+      quantity: 1
+    };
+
+    const existingCart = JSON.parse(localStorage.getItem("cartItems")) || [];
+    existingCart.push(productObj);
+    localStorage.setItem("cartItems", JSON.stringify(existingCart));
+    alert(`✅ ${productObj.name} added to your bag!`);
+  });
+
+  document.getElementById("joinUnlockBtn").addEventListener("click", joinToUnlock);
+
+  async function joinToUnlock() {
+    const email = localStorage.getItem("username");
+    if (!email) {
+      alert("⚠️ Please sign in to join the discount queue.");
+      window.location.href = "signin.html";
+      return;
+    }
+
+    try {
+      const res = await fetch('http://localhost:3000/api/unlock-queue', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, productId })
+      });
+
+      const data = await res.json();
+      if (res.ok) {
+        if (data.discountActivated) {
+          discountActivated = true;
+          const discountedPrice = (originalPrice * (1 - data.discountPercentage)).toFixed(2);
+          document.getElementById("product-price").textContent = `${discountedPrice} SAR`;
+          alert(`🎉 Discount Activated! You got ${(data.discountPercentage * 100).toFixed(0)}% off!`);
+        } else {
+          alert(`✅ Joined the queue! ${data.queueLength} users have joined.`);
+          updateQueueSize(productId);
+        }
+      } else {
+        alert("❌ " + data.message);
+      }
+    } catch (err) {
+      console.error(err);
+      alert("❌ Server error");
+    }
+  }
+
+  async function updateQueueSize(productId) {
+    try {
+      const res = await fetch(`http://localhost:3000/api/unlock-queue/queue-size?productId=${encodeURIComponent(productId)}`);
+      const data = await res.json();
+      document.getElementById("queueInfo").textContent =
+        `🔥 Current queue size: ${data.queueLength || 0}`;
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  updateQueueSize(productId);
+});
+  </script>
+
+</body>
+</html>

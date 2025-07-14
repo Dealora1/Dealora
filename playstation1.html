@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Product Detail - Dealora</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    .selected { border: 2px solid #333; }
+    .unlock-btn {
+      background-color: #28a745;
+      color: #fff;
+      font-weight: bold;
+      padding: 15px;
+      border: none;
+      cursor: pointer;
+      width: 100%;
+      font-size: 16px;
+      margin-top: 10px;
+    }
+    .unlock-btn:hover {
+      background-color: #218838;
+    }
+  </style>
+</head>
+<body class="catalog-page">
+  <header class="main-header">
+    <div class="left-side">
+      <a href="home.html" class="logo">DEALORA</a>
+      <nav class="nav">
+        <a href="women.html">Women</a>
+        <a href="men.html">Men</a>
+        <a href="kids.html">Kids</a>
+        <a href="catalog.html">Shop</a>
+      </nav>
+    </div>
+    <div class="right-side">
+      <a href="signin.html" title="Account">
+        <i class="fas fa-user"></i>
+      </a>
+      <a href="cart.html" title="Cart">
+        <i class="fas fa-bag-shopping"></i>
+      </a>
+    </div>
+  </header>
+
+  <div class="product-detail">
+    <img id="product-image" src="" alt="Product Image" style="max-width: 300px;" />
+    <div class="product-info">
+      <p>PLAYSTATION EDITION</p>
+      <h2 id="product-name">Product Name</h2>
+      <p class="price" id="product-price">0 SAR</p>
+
+      <div class="colors">
+        <p>Color:</p>
+        <span class="color-circle color-gray" title="Gray" style="background: gray; width:20px; height:20px; display:inline-block; border-radius:50%; cursor:pointer;"></span>
+        <span class="color-circle" style="background: white; width:20px; height:20px; display:inline-block; border-radius:50%; border:1px solid #aaa; cursor:pointer;"></span>
+        <span class="color-circle" style="background: black; width:20px; height:20px; display:inline-block; border-radius:50%; cursor:pointer;"></span>
+      </div>
+
+      <div class="option-group">
+        <p>Edition:</p>
+        <div class="option-buttons" id="edition-options">
+          <button>Standard</button>
+          <button>Digital</button>
+          <button>Slim</button>
+          <button>Pro</button>
+        </div>
+      </div>
+
+      <div class="option-group">
+        <p>Extras:</p>
+        <div class="option-buttons" id="extras-options">
+          <button>Extra Controller</button>
+          <button>Charging Dock</button>
+          <button>Pulse 3D Headset</button>
+          <button>Camera</button>
+        </div>
+      </div>
+
+      <button class="add-to-bag" id="addToBagBtn">ADD TO BAG</button>
+      <button id="joinUnlockBtn" class="unlock-btn" style="display:none;">Join to Unlock</button>
+      <p id="queueInfo" style="display:none;">🔥 Current queue size: 0</p>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", async () => {
+      let originalPrice = 0;
+      let deal = null;
+      let discountActivated = false;
+
+      const params = new URLSearchParams(window.location.search);
+      const productId = params.get("id");
+
+      if (!productId) {
+        alert("⚠️ Please open the page with product details.");
+        window.location.href = "home.html";
+        return;
+      }
+
+      const idNumber = Number(productId);
+      if (isNaN(idNumber) || idNumber < 26 || idNumber > 34) {
+        alert("❌ This product does not belong to the PlayStation section.");
+        window.location.href = "home.html";
+        return;
+      }
+
+      try {
+        const res = await fetch(`http://localhost:3000/api/products/${encodeURIComponent(productId)}`);
+        const product = await res.json();
+
+        if (!res.ok || !product) {
+          alert("❌ Product not found.");
+          window.location.href = "home.html";
+          return;
+        }
+
+        originalPrice = product.price;
+        document.getElementById("product-name").textContent = product.name;
+        document.getElementById("product-price").textContent = `${originalPrice.toFixed(2)} SAR`;
+        document.getElementById("product-image").src = `./image/${product.image}`;
+
+      } catch (err) {
+        console.error(err);
+        alert("❌ Error loading product data.");
+        window.location.href = "home.html";
+        return;
+      }
+
+      try {
+        const res = await fetch(`http://localhost:3000/api/deals/${encodeURIComponent(productId)}`);
+        const data = await res.json();
+
+        if (res.ok && data.discountPercentage && data.discountPercentage > 0) {
+          deal = data;
+          const percent = (deal.discountPercentage * 100).toFixed(0);
+          document.getElementById("joinUnlockBtn").style.display = "inline-block";
+          document.getElementById("queueInfo").style.display = "block";
+          updateQueueSize(productId);
+        }
+      } catch (err) {
+        console.error(err);
+      }
+
+      document.querySelectorAll('.color-circle').forEach(circle => {
+        circle.addEventListener('click', () => {
+          document.querySelectorAll('.color-circle').forEach(c => c.classList.remove('selected'));
+          circle.classList.add('selected');
+        });
+      });
+
+      function activateSelection(groupId) {
+        document.querySelectorAll(`#${groupId} button`).forEach(button => {
+          button.addEventListener('click', () => {
+            document.querySelectorAll(`#${groupId} button`).forEach(b => b.classList.remove('selected'));
+            button.classList.add('selected');
+          });
+        });
+      }
+
+      activateSelection('edition-options');
+      activateSelection('extras-options');
+
+      document.getElementById("joinUnlockBtn").addEventListener("click", joinToUnlock);
+
+      async function joinToUnlock() {
+        const email = localStorage.getItem("username");
+        if (!email) {
+          alert("⚠️ Please sign in to join the discount queue.");
+          window.location.href = "signin.html";
+          return;
+        }
+
+        try {
+          const res = await fetch('http://localhost:3000/api/unlock-queue', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, productId })
+          });
+
+          const data = await res.json();
+          if (res.ok) {
+            if (data.discountActivated) {
+              discountActivated = true;
+              const discountedPrice = (originalPrice * (1 - deal.discountPercentage)).toFixed(2);
+              document.getElementById("product-price").textContent = `${discountedPrice} SAR`;
+              alert(`🎉 Discount Activated! You got ${(deal.discountPercentage * 100).toFixed(0)}% off!`);
+            } else {
+              alert(`✅ Joined the queue! ${data.queueLength} users have joined.`);
+              updateQueueSize(productId);
+            }
+          } else {
+            alert("❌ " + data.message);
+          }
+        } catch (err) {
+          alert("❌ Server error");
+          console.error(err);
+        }
+      }
+
+      document.getElementById("addToBagBtn").addEventListener("click", () => {
+        const selectedColor = document.querySelector('.color-circle.selected');
+        const selectedEdition = document.querySelector('#edition-options button.selected');
+        const selectedExtras = document.querySelector('#extras-options button.selected');
+
+        if (!selectedColor || !selectedEdition) {
+          alert("⚠️ Please select both a color and an edition.");
+          return;
+        }
+
+        let finalPrice = originalPrice;
+        if (deal && discountActivated) {
+          finalPrice = originalPrice * (1 - deal.discountPercentage);
+        }
+
+        const productObj = {
+          name: document.getElementById("product-name").textContent,
+          price: `${finalPrice.toFixed(2)} SAR`,
+          image: document.getElementById("product-image").src,
+          color: selectedColor.title,
+          edition: selectedEdition.textContent,
+          extras: selectedExtras ? selectedExtras.textContent : "None",
+          quantity: 1
+        };
+
+        const existingCart = JSON.parse(localStorage.getItem("cartItems")) || [];
+        existingCart.push(productObj);
+        localStorage.setItem("cartItems", JSON.stringify(existingCart));
+        alert(`✅ ${productObj.name} added to your bag!`);
+      });
+
+      async function updateQueueSize(productId) {
+        try {
+          const res = await fetch(`http://localhost:3000/api/unlock-queue/queue-size?productId=${encodeURIComponent(productId)}`);
+          const data = await res.json();
+          document.getElementById("queueInfo").textContent =
+            `🔥 Current queue size: ${data.queueLength || 0}`;
+          if (data.discountActivated) {
+            discountActivated = true;
+            const discountedPrice = (originalPrice * (1 - deal.discountPercentage)).toFixed(2);
+            document.getElementById("product-price").textContent = `${discountedPrice} SAR`;
+          }
+        } catch (err) {
+          console.error(err);
+        }
+      }
+    });
+  </script>
+</body>
+</html>
