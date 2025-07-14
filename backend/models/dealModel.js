@@ -1,3 +1,20 @@
+<<<<<<< HEAD
+const mongoose = require('mongoose');
+
+const dealSchema = new mongoose.Schema({
+  productId: {
+    type: String,
+    required: true,
+    unique: true
+  },
+  productName: String,
+  requiredCount: Number,
+  discountPercentage: Number,
+  joinedUsers: [String]
+});
+
+module.exports = mongoose.models.Deal || mongoose.model('Deal', dealSchema);
+=======
 // const mongoose = require('mongoose');
 
 // const dealSchema = new mongoose.Schema({
@@ -36,3 +53,4 @@ const dealSchema = new mongoose.Schema({
 module.exports = mongoose.model('Deal', dealSchema);
 
 
+>>>>>>> d18eae1b3237d316461ef08c194d929dc0ccf148

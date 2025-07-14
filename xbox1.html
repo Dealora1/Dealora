@@ -5,10 +5,82 @@
   <title>XBOX SERIES EDITION - Dealora</title>
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<<<<<<< HEAD
+  <style>
+    .selected {
+      border: 2px solid #333;
+    }
+    .product-detail {
+      display: flex;
+      gap: 50px;
+      margin: 50px;
+      justify-content: center;
+      align-items: flex-start;
+    }
+    .product-detail img {
+      max-width: 400px;
+      height: auto;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+    }
+    .product-info {
+      max-width: 500px;
+    }
+    .product-info h2 {
+      font-size: 28px;
+      margin-top: 0;
+    }
+    .price {
+      font-weight: bold;
+      font-size: 22px;
+      margin: 10px 0;
+    }
+    .color-circle {
+      width: 25px;
+      height: 25px;
+      display: inline-block;
+      border-radius: 50%;
+      cursor: pointer;
+      margin-right: 8px;
+      border: 1px solid #ccc;
+    }
+    .add-to-bag {
+      background-color: black;
+      color: white;
+      font-weight: bold;
+      padding: 15px;
+      border: none;
+      cursor: pointer;
+      width: 100%;
+      font-size: 16px;
+      margin: 10px 0;
+    }
+    .add-to-bag:hover {
+      background-color: #333;
+    }
+    #joinUnlockBtn {
+      background-color: #28a745;
+      margin-top: 10px;
+    }
+    #joinUnlockBtn:hover {
+      background-color: #218838;
+    }
+    #queueInfo {
+      margin-top: 10px;
+      font-size: 16px;
+      color: #d9534f;
+    }
+  </style>
+</head>
+<body class="catalog-page">
+
+  <!-- ✅ Header -->
+=======
 </head>
 <body class="catalog-page">
 
   <!-- ✅ الهيدر الموحد -->
+>>>>>>> d18eae1b3237d316461ef08c194d929dc0ccf148
   <header class="main-header">
     <div class="left-side">
       <a href="home.html" class="logo">DEALORA</a>
@@ -60,12 +132,20 @@
     </div>
   </header>
 
+<<<<<<< HEAD
+  <!-- ✅ Product Detail Section -->
+=======
   <!-- ✅ تفاصيل المنتج -->
+>>>>>>> d18eae1b3237d316461ef08c194d929dc0ccf148
   <div class="product-detail">
     <img id="product-image" src="" alt="Product Image">
     <div class="product-info">
       <h2 id="product-name">Product Name</h2>
+<<<<<<< HEAD
+      <p class="price" id="product-price">0 SAR</p>
+=======
       <p class="price" id="product-price">000sr</p>
+>>>>>>> d18eae1b3237d316461ef08c194d929dc0ccf148
 
       <div class="colors">
         <p>Color:</p>
@@ -74,12 +154,157 @@
         <span class="color-circle" style="background-color: green;" title="Green"></span>
       </div>
 
+<<<<<<< HEAD
+      <button class="add-to-bag" id="addToBagBtn">ADD TO BAG</button>
+      <button class="add-to-bag" id="joinUnlockBtn">Join to Unlock</button>
+=======
       <button class="add-to-bag">ADD TO BAG</button>
       <button id="joinUnlockBtn" class="add-to-bag">Join to Unlock</button>
+>>>>>>> d18eae1b3237d316461ef08c194d929dc0ccf148
       <p id="queueInfo">🔥 Current queue size: 0</p>
     </div>
   </div>
 
+<<<<<<< HEAD
+  <script>
+    function toggleDropdown(event, id) {
+      event.preventDefault();
+      event.stopPropagation();
+      document.querySelectorAll('.dropdown-content').forEach(el => {
+        if (el.id !== id) el.classList.remove("show");
+      });
+      const target = document.getElementById(id);
+      target.classList.toggle("show");
+    }
+    window.addEventListener("click", function (e) {
+      if (!e.target.closest('.dropdown')) {
+        document.querySelectorAll('.dropdown-content').forEach(el => {
+          el.classList.remove("show");
+        });
+      }
+    });
+  </script>
+
+  <script>
+document.addEventListener("DOMContentLoaded", async () => {
+  const params = new URLSearchParams(window.location.search);
+  const productId = params.get("id");
+
+  if (!productId) {
+    alert("⚠️ Please open the page with product details.");
+    window.location.href = "xbox.html";
+    return;
+  }
+
+  let originalPrice = 0;
+  let deal = null;
+  let discountActivated = false;
+
+  try {
+    const res = await fetch(`http://localhost:3000/api/products/${productId}`);
+    const product = await res.json();
+
+    if (!res.ok || !product) {
+      alert("❌ Product not found.");
+      window.location.href = "xbox.html";
+      return;
+    }
+
+    originalPrice = product.price;
+    document.getElementById("product-name").textContent = product.name;
+    document.getElementById("product-price").textContent = `${originalPrice.toFixed(2)} SAR`;
+    document.getElementById("product-image").src = `./image/${product.image}`;
+  } catch (err) {
+    console.error(err);
+    alert("❌ Error loading product data.");
+    window.location.href = "xbox.html";
+    return;
+  }
+
+  document.querySelectorAll('.color-circle').forEach(circle => {
+    circle.addEventListener('click', () => {
+      document.querySelectorAll('.color-circle').forEach(c => c.classList.remove('selected'));
+      circle.classList.add('selected');
+    });
+  });
+
+  document.getElementById("addToBagBtn").addEventListener("click", () => {
+    const selectedColor = document.querySelector('.color-circle.selected');
+    if (!selectedColor) {
+      alert("⚠️ Please select a color.");
+      return;
+    }
+
+    let finalPrice = originalPrice;
+    if (deal && discountActivated) {
+      finalPrice = originalPrice * (1 - deal.discountPercentage);
+    }
+
+    const productObj = {
+      name: document.getElementById("product-name").textContent,
+      price: `${finalPrice.toFixed(2)} SAR`,
+      image: document.getElementById("product-image").src,
+      color: selectedColor.title,
+      quantity: 1
+    };
+
+    const existingCart = JSON.parse(localStorage.getItem("cartItems")) || [];
+    existingCart.push(productObj);
+    localStorage.setItem("cartItems", JSON.stringify(existingCart));
+    alert(`✅ ${productObj.name} added to your bag!`);
+  });
+
+  document.getElementById("joinUnlockBtn").addEventListener("click", joinToUnlock);
+
+  async function joinToUnlock() {
+    const email = localStorage.getItem("username");
+    if (!email) {
+      alert("⚠️ Please sign in to join the discount queue.");
+      window.location.href = "signin.html";
+      return;
+    }
+
+    try {
+      const res = await fetch('http://localhost:3000/api/unlock-queue', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, productId })
+      });
+
+      const data = await res.json();
+      if (res.ok) {
+        if (data.discountActivated) {
+          discountActivated = true;
+          const discountedPrice = (originalPrice * (1 - data.discountPercentage)).toFixed(2);
+          document.getElementById("product-price").textContent = `${discountedPrice} SAR`;
+          alert(`🎉 Discount Activated! You got ${(data.discountPercentage * 100).toFixed(0)}% off!`);
+        } else {
+          alert(`✅ Joined the queue! ${data.queueLength} users have joined.`);
+          updateQueueSize(productId);
+        }
+      } else {
+        alert("❌ " + data.message);
+      }
+    } catch (err) {
+      console.error(err);
+      alert("❌ Server error");
+    }
+  }
+
+  async function updateQueueSize(productId) {
+    try {
+      const res = await fetch(`http://localhost:3000/api/unlock-queue/queue-size?productId=${encodeURIComponent(productId)}`);
+      const data = await res.json();
+      document.getElementById("queueInfo").textContent =
+        `🔥 Current queue size: ${data.queueLength || 0}`;
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  updateQueueSize(productId);
+});
+=======
   <!-- ✅ JavaScript -->
   <script>
     const params = new URLSearchParams(window.location.search);
@@ -171,8 +396,12 @@
         console.error("❌ Error loading queue size:", err);
       }
     }
+>>>>>>> d18eae1b3237d316461ef08c194d929dc0ccf148
   </script>
 
 </body>
 </html>
+<<<<<<< HEAD
+=======
 
+>>>>>>> d18eae1b3237d316461ef08c194d929dc0ccf148

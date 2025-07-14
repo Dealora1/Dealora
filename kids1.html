@@ -1,6 +1,243 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<<<<<<< HEAD
+  <meta charset="UTF-8" />
+  <title>Product Detail - Dealora</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    .selected { border: 2px solid #333; }
+    .original-price {
+      text-decoration: line-through;
+      color: #999;
+      margin-left: 10px;
+      font-size: 16px;
+    }
+    .unlock-btn {
+      background-color: #28a745;
+      color: #fff;
+      font-weight: bold;
+      padding: 15px;
+      border: none;
+      cursor: pointer;
+      width: 100%;
+      font-size: 16px;
+      margin-top: 10px;
+    }
+    .unlock-btn:hover {
+      background-color: #218838;
+    }
+  </style>
+</head>
+<body class="catalog-page">
+
+<header class="main-header">
+  <div class="left-side">
+    <a href="home.html" class="logo">DEALORA</a>
+    <nav class="nav">
+      <a href="women.html">Women</a>
+      <a href="men.html">Men</a>
+      <a href="kids.html">Kids</a>
+      <a href="shop.html">Shop</a>
+    </nav>
+  </div>
+  <div class="right-side">
+    <a href="signin.html" title="Account">
+      <i class="fas fa-user"></i>
+    </a>
+    <a href="cart.html" title="Cart">
+      <i class="fas fa-bag-shopping"></i>
+    </a>
+  </div>
+</header>
+
+<div class="product-detail">
+  <img id="product-image" src="" alt="Product Image" style="max-width: 300px;">
+  <div class="product-info">
+    <p>LISA ARMSTRONG EDIT</p>
+    <h2 id="product-name">Product Name</h2>
+    <p class="price" id="product-price">0 SAR
+      <span id="original-price" class="original-price" style="display:none;"></span>
+    </p>
+    <p id="discount-info" style="display: none; font-size: 18px; font-weight: bold; color: green;"></p>
+    <div class="colors">
+      <p>Colour:</p>
+      <span class="color-circle color-brown" title="Brown" style="background:brown; width:20px; height:20px; display:inline-block; border-radius:50%; cursor:pointer;"></span>
+      <span class="color-circle color-gray" title="Gray" style="background:gray; width:20px; height:20px; display:inline-block; border-radius:50%; cursor:pointer;"></span>
+    </div>
+    <div class="sizes">
+      <p>Size:</p>
+      <button>6</button><button>8</button><button>10</button>
+      <button>12</button><button>14</button><button>16</button><button>18</button>
+    </div>
+    <button class="add-to-bag" id="addToBagBtn">ADD TO BAG</button>
+    <button id="joinUnlockBtn" class="unlock-btn" style="display:none;">JOIN TO UNLOCK</button>
+    <p id="queueInfo" style="display:none;">🔥 Current queue size: 0</p>
+  </div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", async () => {
+  let originalPrice = 0;
+  let deal = null;
+  let discountActivated = false;
+
+  const params = new URLSearchParams(window.location.search);
+  const productId = params.get("id");
+
+  if (!productId) {
+    alert("⚠️ Please open the page with product details.");
+    window.location.href = "home.html";
+    return;
+  }
+
+  // ✅ Check if product belongs to Kids range
+  const kidsIds = ["18","19","20","21","22","23","24","25"];
+  if (!kidsIds.includes(productId)) {
+    alert("❌ This product does not belong to the Kids section.");
+    window.location.href = "kids.html";
+    return;
+  }
+
+  try {
+    const res = await fetch(`http://localhost:3000/api/products/${encodeURIComponent(productId)}`);
+    const product = await res.json();
+
+    if (!res.ok || !product) {
+      alert("❌ Product not found.");
+      window.location.href = "kids.html";
+      return;
+    }
+
+    originalPrice = product.price;
+    document.getElementById("product-name").textContent = product.name;
+    document.getElementById("product-price").textContent = `${originalPrice.toFixed(2)} SAR`;
+    document.getElementById("product-image").src = `./image/${product.image}`;
+
+  } catch (err) {
+    console.error(err);
+    alert("❌ Error loading product data.");
+    window.location.href = "kids.html";
+    return;
+  }
+
+  try {
+    const res = await fetch(`http://localhost:3000/api/deals/${encodeURIComponent(productId)}`);
+    const data = await res.json();
+
+    if (res.ok && data.discountPercentage && data.discountPercentage > 0) {
+      deal = data;
+      const percent = (deal.discountPercentage * 100).toFixed(0);
+      document.getElementById("discount-info").style.display = "block";
+      document.getElementById("discount-info").textContent = `🎉 Get ${percent}% Discount!`;
+      document.getElementById("joinUnlockBtn").style.display = "inline-block";
+      document.getElementById("queueInfo").style.display = "block";
+      updateQueueSize(productId);
+    }
+  } catch (err) {
+    console.error(err);
+  }
+
+  document.querySelectorAll('.color-circle').forEach(circle => {
+    circle.addEventListener('click', () => {
+      document.querySelectorAll('.color-circle').forEach(c => c.classList.remove('selected'));
+      circle.classList.add('selected');
+    });
+  });
+
+  document.querySelectorAll('.sizes button').forEach(button => {
+    button.addEventListener('click', () => {
+      document.querySelectorAll('.sizes button').forEach(b => b.classList.remove('selected'));
+      button.classList.add('selected');
+    });
+  });
+
+  document.getElementById("joinUnlockBtn").addEventListener("click", joinToUnlock);
+
+  async function joinToUnlock() {
+    const email = localStorage.getItem("username");
+    if (!email) {
+      alert("⚠️ Please sign in to join the discount queue.");
+      window.location.href = "signin.html";
+      return;
+    }
+
+    try {
+      const res = await fetch('http://localhost:3000/api/unlock-queue', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, productId })
+      });
+
+      const data = await res.json();
+      if (res.ok) {
+        if (data.discountActivated) {
+          discountActivated = true;
+          const discountedPrice = (originalPrice * (1 - deal.discountPercentage)).toFixed(2);
+          document.getElementById("product-price").textContent = `${discountedPrice} SAR`;
+          alert(`🎉 Discount Activated! You got ${(deal.discountPercentage * 100).toFixed(0)}% off!`);
+        } else {
+          alert(`✅ Joined the queue! ${data.queueLength} users have joined.`);
+          updateQueueSize(productId);
+        }
+      } else {
+        alert("❌ " + data.message);
+      }
+    } catch (err) {
+      alert("❌ Server error");
+      console.error(err);
+    }
+  }
+
+  document.getElementById("addToBagBtn").addEventListener("click", () => {
+    const selectedColor = document.querySelector('.color-circle.selected');
+    const selectedSize = document.querySelector('.sizes button.selected');
+
+    if (!selectedColor || !selectedSize) {
+      alert("⚠️ Please select both a color and a size.");
+      return;
+    }
+
+    let finalPrice = originalPrice;
+    if (deal && discountActivated) {
+      finalPrice = originalPrice * (1 - deal.discountPercentage);
+    }
+
+    const productObj = {
+      name: document.getElementById("product-name").textContent,
+      price: `${finalPrice.toFixed(2)} SAR`,
+      image: document.getElementById("product-image").src,
+      color: selectedColor.title,
+      size: selectedSize.textContent,
+      quantity: 1
+    };
+
+    const existingCart = JSON.parse(localStorage.getItem("cartItems")) || [];
+    existingCart.push(productObj);
+    localStorage.setItem("cartItems", JSON.stringify(existingCart));
+    alert(`✅ ${productObj.name} added to your bag!`);
+  });
+
+  async function updateQueueSize(productId) {
+    try {
+      const res = await fetch(`http://localhost:3000/api/unlock-queue/queue-size?productId=${encodeURIComponent(productId)}`);
+      const data = await res.json();
+      document.getElementById("queueInfo").textContent =
+        `🔥 Current queue size: ${data.queueLength || 0}`;
+      if (data.discountActivated) {
+        discountActivated = true;
+        const discountedPrice = (originalPrice * (1 - deal.discountPercentage)).toFixed(2);
+        document.getElementById("product-price").textContent = `${discountedPrice} SAR`;
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  }
+});
+</script>
+
+=======
   <meta charset="UTF-8">
   <title>Linen Cropped Utility Jacket - Dealora</title>
   <link rel="stylesheet" href="styles.css">
@@ -144,6 +381,7 @@
       }
     });
   </script>
+>>>>>>> d18eae1b3237d316461ef08c194d929dc0ccf148
 
 </body>
 </html>

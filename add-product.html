@@ -1,14 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<<<<<<< HEAD
+  <meta charset="UTF-8" />
+=======
   <meta charset="UTF-8">
+>>>>>>> d18eae1b3237d316461ef08c194d929dc0ccf148
   <title>Add Product - Dealora</title>
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
 
+<<<<<<< HEAD
+=======
 <!-- ✅ Header (consistent with other pages) -->
+>>>>>>> d18eae1b3237d316461ef08c194d929dc0ccf148
 <header>
   <div class="left-side">
     <a href="home.html" class="logo">DEALORA</a>
@@ -30,6 +37,28 @@
   </div>
 </header>
 
+<<<<<<< HEAD
+<div class="add-product-container" style="max-width: 500px; margin: 100px auto; background: #f9f9f9; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
+  <h2 style="text-align: center;">Add Product</h2>
+  <form id="addProductForm">
+    <label>Product ID (unique):</label>
+    <input type="text" id="productId" required style="width: 100%; padding: 10px; margin-bottom: 15px;"><br>
+
+    <label>Product Name:</label>
+    <input type="text" id="productName" required style="width: 100%; padding: 10px; margin-bottom: 15px;"><br>
+
+    <label>Price:</label>
+    <input type="number" id="price" required step="0.01" style="width: 100%; padding: 10px; margin-bottom: 15px;"><br>
+
+    <label>Image File Name (e.g. 9.png or 1446-11-07 14.40.54.jpg):</label>
+    <input type="text" id="image" required style="width: 100%; padding: 10px; margin-bottom: 15px;"><br>
+
+    <label>Required Users to Unlock Discount (optional):</label>
+    <input type="number" id="requiredCount" min="1" style="width: 100%; padding: 10px; margin-bottom: 15px;"><br>
+
+    <label>Discount Percentage (e.g. 0.2 for 20%) (optional):</label>
+    <input type="number" id="discountPercentage" step="0.01" min="0" max="1" style="width: 100%; padding: 10px; margin-bottom: 15px;"><br>
+=======
 <!-- ✅ Add Product Form -->
 <div class="add-product-container" style="max-width: 400px; margin: 100px auto; background: #f9f9f9; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
   <h2 style="text-align: center;">Add Product</h2>
@@ -45,11 +74,58 @@
 
     <label>Discount Percentage (e.g. 0.2 for 20%):</label>
     <input type="number" id="discountPercentage" step="0.01" min="0" max="1" required style="width: 100%; padding: 10px; margin-bottom: 15px;"><br>
+>>>>>>> d18eae1b3237d316461ef08c194d929dc0ccf148
 
     <button type="submit" class="btn" style="width: 100%; background: black; color: white; padding: 12px; font-weight: bold;">Add Product</button>
   </form>
 </div>
 
+<<<<<<< HEAD
+<script>
+  document.getElementById('addProductForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const productId = document.getElementById('productId').value.trim();
+    const productName = document.getElementById('productName').value.trim();
+    const price = document.getElementById('price').value.trim();
+    const image = document.getElementById('image').value.trim();
+    const requiredCountVal = document.getElementById('requiredCount').value.trim();
+    const discountPercentageVal = document.getElementById('discountPercentage').value.trim();
+
+    let requiredCount = null;
+    let discountPercentage = null;
+
+    if (requiredCountVal) {
+      requiredCount = parseInt(requiredCountVal);
+      if (discountPercentageVal === "") {
+        alert("⚠️ You must enter a discount percentage if you set a required user count.");
+        return;
+      }
+      discountPercentage = parseFloat(discountPercentageVal);
+      if (discountPercentage <= 0 || discountPercentage >= 1) {
+        alert("⚠️ Please enter a valid discount percentage between 0 and 1.");
+        return;
+      }
+    }
+
+    const payload = {
+      productId,
+      name: productName,
+      price,
+      image
+    };
+
+    if (requiredCount !== null) {
+      payload.requiredCount = requiredCount;
+      payload.discountPercentage = discountPercentage;
+    }
+
+    try {
+      const res = await fetch('http://localhost:3000/api/products', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+=======
 <!-- ✅ JavaScript to Submit Form -->
 <script>
   document.getElementById('addProductForm').addEventListener('submit', async (e) => {
@@ -70,6 +146,7 @@
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ productId, productName, requiredCount, discountPercentage })
+>>>>>>> d18eae1b3237d316461ef08c194d929dc0ccf148
       });
 
       const data = await res.json();
@@ -88,6 +165,9 @@
 
 </body>
 </html>
+<<<<<<< HEAD
+=======
 
 
 
+>>>>>>> d18eae1b3237d316461ef08c194d929dc0ccf148

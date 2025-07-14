@@ -1,6 +1,139 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<<<<<<< HEAD
+  <meta charset="UTF-8" />
+  <title>Nintendo Collection - Dealora</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    .selected {
+      border: 2px solid #333;
+    }
+    .product-detail {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 50px;
+      margin: 50px;
+      justify-content: center;
+      align-items: flex-start;
+    }
+    .product-detail img {
+      max-width: 400px;
+      height: auto;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+    }
+    .product-info {
+      max-width: 500px;
+    }
+    .product-info h2 {
+      font-size: 28px;
+      margin-top: 0;
+    }
+    .price {
+      font-weight: bold;
+      font-size: 22px;
+      margin: 10px 0;
+    }
+    .color-circle {
+      width: 25px;
+      height: 25px;
+      display: inline-block;
+      border-radius: 50%;
+      cursor: pointer;
+      margin-right: 8px;
+      border: 1px solid #ccc;
+    }
+    .option-group {
+      margin-top: 20px;
+    }
+    .option-buttons button {
+      margin-right: 8px;
+      margin-bottom: 8px;
+      padding: 10px 15px;
+      cursor: pointer;
+      background: #f8f8f8;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    .option-buttons button.selected {
+      background: #333;
+      color: #fff;
+    }
+    .add-to-bag {
+      background-color: black;
+      color: white;
+      font-weight: bold;
+      padding: 15px;
+      border: none;
+      cursor: pointer;
+      width: 100%;
+      font-size: 16px;
+      margin: 10px 0;
+    }
+    .add-to-bag:hover {
+      background-color: #333;
+    }
+    #joinUnlockBtn {
+      background-color: #28a745;
+    }
+    #joinUnlockBtn:hover {
+      background-color: #218838;
+    }
+    #queueInfo {
+      margin-top: 10px;
+      font-size: 16px;
+      color: #d9534f;
+    }
+  </style>
+</head>
+<body class="catalog-page">
+
+  <!-- ✅ Header -->
+  <header class="main-header">
+    <div class="left-side">
+      <a href="home.html" class="logo">DEALORA</a>
+      <nav class="nav">
+        <div class="dropdown">
+          <a href="#" onclick="toggleDropdown(event, 'newinDropdown')">NEW IN</a>
+          <div class="dropdown-content" id="newinDropdown">
+            <div class="column">
+              <h4>New In</h4>
+              <a href="#">New Arrivals</a>
+              <a href="#">Trending Now</a>
+              <a href="#">This Week’s Picks</a>
+              <a href="#">Limited Edition</a>
+              <a href="#">Back in Stock</a>
+            </div>
+          </div>
+        </div>
+        <div class="dropdown">
+          <a href="#" onclick="toggleDropdown(event, 'shopDropdown')">SHOP</a>
+          <div class="dropdown-content" id="shopDropdown">
+            <div class="column">
+              <a href="Games.html"><h4>Games</h4></a> 
+              <a href="playstation.html">PlayStation</a>
+              <a href="xbox.html">Xbox</a>
+              <a href="Nintendo.html">Nintendo</a>
+            </div>
+            <div class="column">
+              <h4>Electronics</h4>
+              <a href="#">Phones</a>
+              <a href="#">Laptops</a>
+              <a href="#">Accessories</a>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </div>
+    <div class="right-side">
+      <div class="search-container">
+        <i class="fas fa-search"></i>
+        <input type="text" placeholder="Search" />
+      </div>
+      <i class="fas fa-heart"></i>
+=======
   <meta charset="UTF-8">
   <title>Linen Cropped Utility Jacket1 - Dealora</title>
   <link rel="stylesheet" href="styles.css">
@@ -23,6 +156,7 @@
         <input type="text" placeholder="Search">
       </div>
       <i class="fas fa-heart" title="Favorites"></i>
+>>>>>>> d18eae1b3237d316461ef08c194d929dc0ccf148
       <a href="signin.html" title="Account">
         <i class="fas fa-user"></i>
       </a>
@@ -32,6 +166,15 @@
     </div>
   </header>
 
+<<<<<<< HEAD
+  <!-- ✅ Product Detail Section -->
+  <div class="product-detail" id="product-detail">
+    <img id="product-image" src="" alt="Product Image" />
+    <div class="product-info">
+      <p>NINTENDO COLLECTION</p>
+      <h2 id="product-name">Loading...</h2>
+      <p class="price" id="product-price">000 SAR</p>
+=======
   <!-- ✅ تفاصيل المنتج -->
   <div class="product-detail">
     <img id="product-image" src="" alt="Product Image">
@@ -39,6 +182,7 @@
       <p>NINTENDO COLLECTION</p>
       <h2 id="product-name">Product Name</h2>
       <p class="price" id="product-price">000sr</p>
+>>>>>>> d18eae1b3237d316461ef08c194d929dc0ccf148
 
       <div class="colors">
         <p>Color:</p>
@@ -73,6 +217,94 @@
     </div>
   </div>
 
+<<<<<<< HEAD
+  <!-- ✅ JS for dropdowns -->
+  <script>
+    function toggleDropdown(event, id) {
+      event.preventDefault();
+      event.stopPropagation();
+      document.querySelectorAll('.dropdown-content').forEach(el => {
+        if (el.id !== id) el.classList.remove("show");
+      });
+      const target = document.getElementById(id);
+      target.classList.toggle("show");
+    }
+    window.addEventListener("click", function(e) {
+      if (!e.target.closest('.dropdown')) {
+        document.querySelectorAll('.dropdown-content').forEach(el => el.classList.remove("show"));
+      }
+    });
+  </script>
+
+  <!-- ✅ Main Page Logic -->
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const params = new URLSearchParams(window.location.search);
+      const image = params.get("image");
+      const name = params.get("name");
+      const price = params.get("price");
+
+      if (!image || !name || !price) {
+        document.getElementById("product-detail").innerHTML =
+          "<p style='font-size:18px; color:#d9534f;'>⚠️ Product info missing. Please go back and select a product.</p>";
+        return;
+      }
+
+      // Populate the page
+      document.getElementById("product-image").src = "./image/" + decodeURIComponent(image);
+      document.getElementById("product-name").textContent = decodeURIComponent(name);
+      document.getElementById("product-price").textContent = `${Number(price).toFixed(2)} SAR`;
+
+      let originalPrice = Number(price);
+      let discountActivated = false;
+      let discountPercentage = 0;
+
+      document.querySelectorAll('.color-circle').forEach(circle => {
+        circle.addEventListener('click', () => {
+          document.querySelectorAll('.color-circle').forEach(c => c.classList.remove('selected'));
+          circle.classList.add('selected');
+        });
+      });
+
+      activateSelection('storage-options');
+      activateSelection('ram-options');
+
+      document.getElementById("addToCartBtn").addEventListener("click", () => {
+        const selectedColor = document.querySelector('.color-circle.selected');
+        const selectedModel = document.querySelector('#storage-options button.selected');
+        const selectedAccessory = document.querySelector('#ram-options button.selected');
+
+        if (!selectedColor || !selectedModel) {
+          alert("⚠️ Please select both a color and a model.");
+          return;
+        }
+
+        let finalPrice = originalPrice;
+        if (discountActivated && discountPercentage > 0) {
+          finalPrice = originalPrice * (1 - discountPercentage);
+        }
+
+        const productObj = {
+          name: document.getElementById("product-name").textContent,
+          price: `${finalPrice.toFixed(2)} SAR`,
+          image: document.getElementById("product-image").src,
+          color: selectedColor.title,
+          model: selectedModel.textContent,
+          accessory: selectedAccessory ? selectedAccessory.textContent : "None",
+          quantity: 1
+        };
+
+        const existingCart = JSON.parse(localStorage.getItem("cartItems")) || [];
+        existingCart.push(productObj);
+        localStorage.setItem("cartItems", JSON.stringify(existingCart));
+        alert(`✅ ${productObj.name} added to your bag!`);
+      });
+
+      document.getElementById("joinUnlockBtn").addEventListener("click", joinToUnlock);
+
+      async function joinToUnlock() {
+        const email = localStorage.getItem("username");
+=======
   <!-- ✅ JavaScript -->
   <script>
     const params = new URLSearchParams(window.location.search);
@@ -144,6 +376,7 @@
         const email = localStorage.getItem("username");
         const productId = document.getElementById("product-name").textContent.trim();
 
+>>>>>>> d18eae1b3237d316461ef08c194d929dc0ccf148
         if (!email) {
           alert("⚠️ Please sign in to join the discount queue.");
           window.location.href = "signin.html";
@@ -154,17 +387,73 @@
           const res = await fetch('http://localhost:3000/api/unlock-queue', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
+<<<<<<< HEAD
+            body: JSON.stringify({ email, name })
+=======
             body: JSON.stringify({ email, productId })
+>>>>>>> d18eae1b3237d316461ef08c194d929dc0ccf148
           });
 
           const data = await res.json();
           if (res.ok) {
+<<<<<<< HEAD
+            if (data.discountActivated) {
+              discountActivated = true;
+              discountPercentage = data.discountPercentage || 0;
+
+              const discountedPrice = (originalPrice * (1 - discountPercentage)).toFixed(2);
+              document.getElementById("product-price").textContent = discountedPrice + " SAR";
+
+              alert(`🎉 Discount Activated! You got ${(discountPercentage * 100).toFixed(0)}% off!`);
+            } else {
+              alert(`✅ Joined the queue! ${data.queueLength} users have joined.`);
+            }
+            document.getElementById("queueInfo").textContent =
+              `🔥 Current queue size: ${data.queueLength || 0}`;
+=======
             alert(data.discountActivated ? "🎉 Discount Activated!" : `✅ Joined the queue! ${data.queueLength} users have joined.`);
             document.getElementById("queueInfo").textContent = `🔥 Current queue size: ${data.queueLength}`;
+>>>>>>> d18eae1b3237d316461ef08c194d929dc0ccf148
           } else {
             alert("❌ " + data.message);
           }
         } catch (err) {
+<<<<<<< HEAD
+          console.error(err);
+          alert("❌ Server error");
+        }
+      }
+
+      async function updateQueueSize(name) {
+        try {
+          const res = await fetch(`http://localhost:3000/api/unlock-queue/queue-size?productName=${encodeURIComponent(name)}`);
+          const data = await res.json();
+          document.getElementById("queueInfo").textContent =
+            `🔥 Current queue size: ${data.queueLength || 0}`;
+          if (data.discountActivated) {
+            discountActivated = true;
+            discountPercentage = data.discountPercentage || 0;
+
+            const discountedPrice = (originalPrice * (1 - discountPercentage)).toFixed(2);
+            document.getElementById("product-price").textContent = discountedPrice + " SAR";
+          }
+        } catch (err) {
+          console.error(err);
+        }
+      }
+
+      updateQueueSize(name);
+    });
+
+    function activateSelection(groupId) {
+      document.querySelectorAll(`#${groupId} button`).forEach(button => {
+        button.addEventListener('click', () => {
+          document.querySelectorAll(`#${groupId} button`).forEach(b => b.classList.remove('selected'));
+          button.classList.add('selected');
+        });
+      });
+    }
+=======
           alert("❌ Server error");
           console.error(err);
         }
@@ -182,9 +471,13 @@
         console.error("❌ Error loading queue size:", err);
       }
     }
+>>>>>>> d18eae1b3237d316461ef08c194d929dc0ccf148
   </script>
 
 </body>
 </html>
+<<<<<<< HEAD
+=======
 
 
+>>>>>>> d18eae1b3237d316461ef08c194d929dc0ccf148

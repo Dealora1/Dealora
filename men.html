@@ -1,13 +1,158 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<<<<<<< HEAD
+  <meta charset="UTF-8" />
+  <title>All Menswear - Dealora</title>
+=======
   <meta charset="UTF-8">
   <title>All Womenswear - Dealora</title>
+>>>>>>> d18eae1b3237d316461ef08c194d929dc0ccf148
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body class="catalog-page">
 
+<<<<<<< HEAD
+<header class="main-header">
+  <div class="left-side">
+    <a href="home.html" class="logo">DEALORA</a>
+    <nav class="nav">
+      <div class="dropdown">
+        <a href="#" onclick="toggleDropdown(event, 'newinDropdown')">NEW IN</a>
+        <div class="dropdown-content" id="newinDropdown">
+          <div class="column">
+            <h4>New In</h4>
+            <a href="#">New Arrivals</a>
+            <a href="#">Trending Now</a>
+          </div>
+        </div>
+      </div>
+      <div class="dropdown">
+        <a href="#" onclick="toggleDropdown(event, 'shopDropdown')">SHOP</a>
+        <div class="dropdown-content" id="shopDropdown">
+          <div class="column">
+            <a href="Games.html"> <h4>Games</h4> </a>
+            <a href="playstation.html">PlayStation</a>
+            <a href="xbox.html">Xbox</a>
+            <a href="Nintendo.html">Nintendo</a>
+          </div>
+          <div class="column">
+            <a href="catalog.html"><h4>CATALOG</h4></a>
+            <a href="men.html">Men</a>
+            <a href="women.html">Women</a>
+            <a href="kids.html">Kids</a>
+          </div>
+        </div>
+      </div>
+    </nav>
+  </div>
+  <div class="right-side">
+    <a href="signin.html" title="Account"><i class="fas fa-user"></i></a>
+    <a href="cart.html" title="Cart"><i class="fas fa-bag-shopping"></i></a>
+  </div>
+</header>
+
+<main class="product-grid">
+
+  <div class="product-card">
+    <a href="men1.html?id=9">
+      <img src="./image/Image 14.png" alt="Men Jacket">
+      <h3>Men Jacket</h3>
+      <p>145 SAR</p>
+    </a>
+  </div>
+
+  <div class="product-card">
+    <a href="men1.html?id=10">
+      <img src="./image/Image 13.png" alt="Men T-Shirt">
+      <h3>Men T-Shirt</h3>
+      <p>120 SAR</p>
+    </a>
+  </div>
+
+  <div class="product-card">
+    <a href="men1.html?id=11">
+      <img src="./image/Image 16.png" alt="Men T-Shirt Gray">
+      <h3>Men T-Shirt Gray</h3>
+      <p>115 SAR</p>
+    </a>
+  </div>
+
+  <div class="product-card">
+    <a href="men1.html?id=12">
+      <img src="./image/Image 15.png" alt="Men Summer Shirt">
+      <h3>Men Summer Shirt</h3>
+      <p>130 SAR</p>
+    </a>
+  </div>
+
+  <div class="product-card">
+    <a href="men1.html?id=13">
+      <img src="./image/Image 17.png" alt="Men Summer Look">
+      <h3>Men Summer Look</h3>
+      <p>135 SAR</p>
+    </a>
+  </div>
+
+  <div class="product-card">
+    <a href="men1.html?id=14">
+      <img src="./image/Image 1.png" alt="Men Casual Tee">
+      <h3>Men Casual Tee</h3>
+      <p>110 SAR</p>
+    </a>
+  </div>
+
+  <div class="product-card">
+    <a href="men1.html?id=15">
+      <img src="./image/Image 16.png" alt="Men Cool Shirt">
+      <h3>Men Cool Shirt</h3>
+      <p>118 SAR</p>
+    </a>
+  </div>
+
+  <div class="product-card">
+    <a href="men1.html?id=16">
+      <img src="./image/Image 12.png" alt="Hoodie Utility Jacket">
+      <h3>Hoodie Utility Jacket</h3>
+      <p>155 SAR</p>
+    </a>
+  </div>
+
+  <div class="product-card">
+    <a href="men1.html?id=17">
+      <img src="./image/Image 18.png" alt="Hoodie Beige">
+      <h3>Hoodie Beige</h3>
+      <p>150 SAR</p>
+    </a>
+  </div>
+
+</main>
+
+<script>
+  function toggleDropdown(event, id) {
+    event.preventDefault();
+    event.stopPropagation();
+
+    document.querySelectorAll('.dropdown-content').forEach(el => {
+      if (el.id !== id) el.classList.remove("show");
+    });
+
+    const dropdown = document.getElementById(id);
+    if (dropdown) dropdown.classList.toggle("show");
+  }
+
+  window.addEventListener("click", function (e) {
+    if (!e.target.closest('.dropdown')) {
+      document.querySelectorAll('.dropdown-content').forEach(el => {
+        el.classList.remove("show");
+      });
+    }
+  });
+</script>
+
+</body>
+=======
   <!-- ✅ الهيدر المعدل -->
   <header>
     <!-- اليسار: الشعار والروابط -->
@@ -297,4 +442,5 @@
 
 </body>
 
+>>>>>>> d18eae1b3237d316461ef08c194d929dc0ccf148
 </html>
