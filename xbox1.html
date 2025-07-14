@@ -5,6 +5,7 @@
   <title>XBOX SERIES EDITION - Dealora</title>
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<<<<<<< HEAD
   <style>
     .selected {
       border: 2px solid #333;
@@ -74,6 +75,12 @@
 <body class="catalog-page">
 
   <!-- ✅ Header -->
+=======
+</head>
+<body class="catalog-page">
+
+  <!-- ✅ الهيدر الموحد -->
+>>>>>>> d18eae1b3237d316461ef08c194d929dc0ccf148
   <header class="main-header">
     <div class="left-side">
       <a href="home.html" class="logo">DEALORA</a>
@@ -125,12 +132,20 @@
     </div>
   </header>
 
+<<<<<<< HEAD
   <!-- ✅ Product Detail Section -->
+=======
+  <!-- ✅ تفاصيل المنتج -->
+>>>>>>> d18eae1b3237d316461ef08c194d929dc0ccf148
   <div class="product-detail">
     <img id="product-image" src="" alt="Product Image">
     <div class="product-info">
       <h2 id="product-name">Product Name</h2>
+<<<<<<< HEAD
       <p class="price" id="product-price">0 SAR</p>
+=======
+      <p class="price" id="product-price">000sr</p>
+>>>>>>> d18eae1b3237d316461ef08c194d929dc0ccf148
 
       <div class="colors">
         <p>Color:</p>
@@ -139,12 +154,18 @@
         <span class="color-circle" style="background-color: green;" title="Green"></span>
       </div>
 
+<<<<<<< HEAD
       <button class="add-to-bag" id="addToBagBtn">ADD TO BAG</button>
       <button class="add-to-bag" id="joinUnlockBtn">Join to Unlock</button>
+=======
+      <button class="add-to-bag">ADD TO BAG</button>
+      <button id="joinUnlockBtn" class="add-to-bag">Join to Unlock</button>
+>>>>>>> d18eae1b3237d316461ef08c194d929dc0ccf148
       <p id="queueInfo">🔥 Current queue size: 0</p>
     </div>
   </div>
 
+<<<<<<< HEAD
   <script>
     function toggleDropdown(event, id) {
       event.preventDefault();
@@ -283,7 +304,104 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   updateQueueSize(productId);
 });
+=======
+  <!-- ✅ JavaScript -->
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const image = params.get("image");
+    const name = params.get("name");
+    const price = params.get("price");
+
+    if (image && name && price) {
+      document.getElementById("product-image").src = "./image/" + decodeURIComponent(image);
+      document.getElementById("product-name").textContent = decodeURIComponent(name);
+      document.getElementById("product-price").textContent = decodeURIComponent(price);
+    }
+
+    // ✅ تفعيل اختيار اللون بدون تغيير الصورة
+    document.querySelectorAll('.color-circle').forEach(circle => {
+      circle.addEventListener('click', () => {
+        document.querySelectorAll('.color-circle').forEach(c => c.classList.remove('selected'));
+        circle.classList.add('selected');
+      });
+    });
+
+    // ✅ Add to Bag Functionality
+    document.querySelector(".add-to-bag").addEventListener("click", () => {
+      const selectedColor = document.querySelector('.color-circle.selected');
+      if (!selectedColor) {
+        alert("Please select a color.");
+        return;
+      }
+
+      const product = {
+        name: document.getElementById("product-name").textContent,
+        price: document.getElementById("product-price").textContent,
+        color: selectedColor.title,
+        quantity: 1
+      };
+
+      const existingCart = JSON.parse(localStorage.getItem("cartItems")) || [];
+      existingCart.push(product);
+      localStorage.setItem("cartItems", JSON.stringify(existingCart));
+
+      alert("✅ Product added to your bag!");
+    });
+
+    // ✅ Initialize Join to Unlock
+    document.addEventListener("DOMContentLoaded", initializeJoinToUnlock);
+
+    function initializeJoinToUnlock() {
+      loadQueueSize();
+      const joinButton = document.getElementById('joinUnlockBtn');
+      joinButton.addEventListener('click', async () => {
+        const email = localStorage.getItem("username");
+        const productId = document.getElementById("product-name").textContent.trim();
+
+        if (!email) {
+          alert("⚠️ Please sign in to join the discount queue.");
+          window.location.href = "signin.html";
+          return;
+        }
+
+        try {
+          const res = await fetch('http://localhost:3000/api/unlock-queue', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, productId })
+          });
+
+          const data = await res.json();
+          if (res.ok) {
+            alert(data.discountActivated ? "🎉 Discount Activated!" : `✅ Joined the queue! ${data.queueLength} users have joined.`);
+            document.getElementById("queueInfo").textContent = `🔥 Current queue size: ${data.queueLength}`;
+          } else {
+            alert("❌ " + data.message);
+          }
+        } catch (err) {
+          alert("❌ Server error");
+          console.error(err);
+        }
+      });
+    }
+
+    // ✅ Function to load the current queue size
+    async function loadQueueSize() {
+      const productId = document.getElementById("product-name").textContent.trim();
+      try {
+        const res = await fetch(`http://localhost:3000/api/unlock-queue/queue-size?productId=${encodeURIComponent(productId)}`);
+        const data = await res.json();
+        document.getElementById("queueInfo").textContent = `🔥 Current queue size: ${data.queueLength || 0}`;
+      } catch (err) {
+        console.error("❌ Error loading queue size:", err);
+      }
+    }
+>>>>>>> d18eae1b3237d316461ef08c194d929dc0ccf148
   </script>
 
 </body>
 </html>
+<<<<<<< HEAD
+=======
+
+>>>>>>> d18eae1b3237d316461ef08c194d929dc0ccf148

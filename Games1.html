@@ -77,9 +77,15 @@
   <div class="product-detail">
     <img id="product-image" src="" alt="Product Image">
     <div class="product-info">
+<<<<<<< HEAD
      <p>LISA ARMSTRONG EDIT</p>
   <h2 id="product-name">Product Name</h2>
   <p class="price" id="product-price">0 SAR</p>
+=======
+      <p>LISA ARMSTRONG EDIT</p>
+      <h2 id="product-name">Product Name</h2>
+      <p class="price" id="product-price">000sr</p>
+>>>>>>> d18eae1b3237d316461ef08c194d929dc0ccf148
 
       <div class="colors">
         <p>Colour:</p>
@@ -93,15 +99,21 @@
         <button>12</button><button>14</button><button>16</button><button>18</button>
       </div>
 
+<<<<<<< HEAD
       <button class="add-to-bag" id="addToBagBtn">ADD TO BAG</button>
 
   <button class="add-to-bag" id="joinUnlockBtn">Join to Unlock</button>
   <p id="queueInfo">🔥 Current queue size: 0</p>
+=======
+      <button class="add-to-bag">ADD TO BAG</button>
+      <button class="add-to-bag">Join to Unlock</button>
+>>>>>>> d18eae1b3237d316461ef08c194d929dc0ccf148
     </div>
   </div>
 
   <!-- ✅ JavaScript -->
   <script>
+<<<<<<< HEAD
   let deal = null;              // holds discount deal
   let discountActivated = false; // flag to know if discount is active
 
@@ -184,6 +196,91 @@
     }
   });
 
+=======
+    const params = new URLSearchParams(window.location.search);
+    const image = params.get("image");
+    const name = params.get("name");
+    const price = params.get("price");
+
+    // Load product data from URL parameters
+    if (image && name && price) {
+      document.getElementById("product-image").src = "./image/" + decodeURIComponent(image);
+      document.getElementById("product-name").textContent = decodeURIComponent(name);
+      document.getElementById("product-price").textContent = decodeURIComponent(price);
+    }
+
+    // Handle color selection
+    document.querySelectorAll('.color-circle').forEach(circle => {
+      circle.addEventListener('click', () => {
+        document.querySelectorAll('.color-circle').forEach(c => c.classList.remove('selected'));
+        circle.classList.add('selected');
+      });
+    });
+
+    // Handle size selection
+    document.querySelectorAll('.sizes button').forEach(button => {
+      button.addEventListener('click', () => {
+        document.querySelectorAll('.sizes button').forEach(b => b.classList.remove('selected'));
+        button.classList.add('selected');
+      });
+    });
+
+    // Add product to cart
+    document.querySelector(".add-to-bag").addEventListener("click", () => {
+      const selectedColor = document.querySelector('.color-circle.selected');
+      const selectedSize = document.querySelector('.sizes button.selected');
+
+      if (!selectedColor || !selectedSize) {
+        alert("Please select both a color and a size.");
+        return;
+      }
+
+      // Create the product object
+      const product = {
+        name: decodeURIComponent(name),
+        price: parseFloat(decodeURIComponent(price)),
+        image: decodeURIComponent(image),
+        color: selectedColor.title,
+        size: selectedSize.textContent,
+        quantity: 1
+      };
+
+      // Retrieve existing cart items from localStorage
+      const existingCart = JSON.parse(localStorage.getItem("cartItems")) || [];
+
+      // Add the product to the cart array
+      existingCart.push(product);
+
+      // Save the updated cart back to localStorage
+      localStorage.setItem("cartItems", JSON.stringify(existingCart));
+
+      alert("✅ Product added to your bag!");
+    });
+
+    // Dropdown toggle function for navigation menus
+    function toggleDropdown(event, id) {
+      event.preventDefault();
+      event.stopPropagation();
+
+      // Close all other dropdowns
+      document.querySelectorAll('.dropdown-content').forEach(el => {
+        if (el.id !== id) el.classList.remove("show");
+      });
+
+      // Open or close the clicked dropdown
+      const target = document.getElementById(id);
+      target.classList.toggle("show");
+    }
+
+    // Close dropdowns when clicking outside
+    window.addEventListener("click", function (e) {
+      if (!e.target.closest('.dropdown')) {
+        document.querySelectorAll('.dropdown-content').forEach(el => {
+          el.classList.remove("show");
+        });
+      }
+    });
+>>>>>>> d18eae1b3237d316461ef08c194d929dc0ccf148
   </script>
 
 </body>

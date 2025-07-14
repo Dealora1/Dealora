@@ -1,9 +1,13 @@
+<<<<<<< HEAD
 // backend/routes/deals.js
 
+=======
+>>>>>>> d18eae1b3237d316461ef08c194d929dc0ccf148
 const express = require('express');
 const router = express.Router();
 const Deal = require('../models/dealModel');
 
+<<<<<<< HEAD
 // ✅ Create a new deal
 router.post('/', async (req, res) => {
   const {
@@ -17,11 +21,19 @@ router.post('/', async (req, res) => {
     return res.status(400).json({
       message: "Missing required fields: productId, productName"
     });
+=======
+router.post('/', async (req, res) => {
+  const { productId, productName, requiredCount } = req.body;
+
+  if (!productId || !requiredCount) {
+    return res.status(400).json({ message: "Missing productId or requiredCount" });
+>>>>>>> d18eae1b3237d316461ef08c194d929dc0ccf148
   }
 
   try {
     const existing = await Deal.findOne({ productId });
     if (existing) {
+<<<<<<< HEAD
       return res.status(409).json({
         message: "Deal already exists for this product"
       });
@@ -89,3 +101,19 @@ router.get('/:productId', async (req, res) => {
 });
 
 module.exports = router;
+=======
+      return res.status(409).json({ message: "Deal already exists for this product" });
+    }
+
+    const deal = new Deal({ productId, productName, requiredCount });
+    await deal.save();
+
+    res.status(201).json({ message: "Deal created successfully" });
+  } catch (err) {
+    console.error("❌ Error:", err);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+module.exports = router;
+>>>>>>> d18eae1b3237d316461ef08c194d929dc0ccf148
